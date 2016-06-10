@@ -27,8 +27,8 @@ API reference
    Memory <modules/memory>
    Statistics <modules/statistics>
 
-Information
------------
+About
+-----
 
 .. toctree::
    :maxdepth: 2
