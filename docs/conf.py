@@ -14,6 +14,36 @@
 
 import sys
 import os
+'''
+try:
+    from unittest.mock import Mock
+except ImportError:
+    from mock import Mock
+
+sys.modules['neon'] = Mock()
+sys.modules['numpy'] = Mock()
+sys.modules['theano'] = Mock()
+#sys.modules['theano.tensor'] = Mock()
+sys.modules['lasagne'] = Mock()
+#sys.modules['lasagne.layers'] = Mock()
+'''
+try:
+    from unittest.mock import MagicMock
+except ImportError:
+    pass
+else:
+    class Mock(MagicMock):
+        @classmethod
+        def __getattr__(cls, name):
+                return Mock()
+
+    MOCK_MODULES = ['theano', 'numpy', 'lasagne', 'neon', 'lasagne.layers.dnn']
+    sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+
+
+
+
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

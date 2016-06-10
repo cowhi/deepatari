@@ -6,6 +6,12 @@
 Welcome to **deepatari**!
 =========================
 
+This is a framework to support the development of algorithms for intelligent
+agents in the Atari game playing domain. The idea is to let researcher or
+programmer focus on the development of algorithms without having to think about
+the whole environment implementation and to facilitate and generalize the
+evaluation of these algorithms to make results comparable.
+
 Help
 ----
 
