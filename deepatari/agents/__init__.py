@@ -1,3 +1,3 @@
 from .agent import Agent
-#from .atariagent import AtariAgent
-#from .statebuffer import StateBuffer
+from .atariagent import AtariAgent
+from .ataristatebuffer import AtariStateBuffer

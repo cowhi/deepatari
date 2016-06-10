@@ -16,7 +16,6 @@ import sys
 
 from .learner import Learner
 
-
 class DQNNeon(Learner):
     """ This class is an implementation of the DQN network based on Neon.
 
@@ -39,6 +38,7 @@ class DQNNeon(Learner):
 
     Note:
         More attributes of this class are defined in the base class Learner.
+
     """
 
     def __init__(self, env, args, rng, name = "DQNNeon"):

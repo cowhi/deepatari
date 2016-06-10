@@ -1,2 +1,2 @@
 from .memory import Memory
-#from .replaymemory import ReplayMemory
+from .replaymemory import ReplayMemory
