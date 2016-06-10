@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Environment Classes &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Learner Classes" href="learner.html"/>
+        <link rel="prev" title="Agent" href="agent.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html">Installation guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#environment-base-class">Environment - Base class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atarienv">AtariEnv</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">Environment</span> <span class="pre">Classes</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/environment.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="environment-classes">
+<span id="envs"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">Environment</span> <span class="pre">Classes</span></code><a class="headerlink" href="#environment-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="environment-base-class">
+<h2>Environment - Base class<a class="headerlink" href="#environment-base-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.envs.env.Environment">
+<em class="property">class </em><code class="descclassname">deepatari.envs.env.</code><code class="descname">Environment</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/env.html#Environment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.env.Environment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the base class for all environment implementations.</p>
+<p>The environment class provides an interface to the environment for the agent
+and allows the agent to interact with it and receive observations of state.</p>
+<dl class="attribute">
+<dt id="Environment.name">
+<code class="descname">name</code><a class="headerlink" href="#Environment.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of the network object.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All subclasses must inherite this class &#8211;&gt; &#8216;class NewClass(Environment)&#8217;</p>
+</div>
+<dl class="method">
+<dt id="deepatari.envs.env.Environment.reset_env">
+<code class="descname">reset_env</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/env.html#Environment.reset_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.env.Environment.reset_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual step function for each subclass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.envs.env.Environment.step">
+<code class="descname">step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/env.html#Environment.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.env.Environment.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual step function for each subclass</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="atarienv">
+<h2>AtariEnv<a class="headerlink" href="#atarienv" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.envs.atarienv.AtariEnv">
+<em class="property">class </em><code class="descclassname">deepatari.envs.atarienv.</code><code class="descname">AtariEnv</code><span class="sig-paren">(</span><em>args</em>, <em>rng</em>, <em>name='OpenAIGym'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/atarienv.html#AtariEnv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.atarienv.AtariEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is an implementation of an Atari environment.</p>
+<p>We are using the OpenAI Gym version, but pimp it a little with direct access
+to some settings from the original ALE implementation.</p>
+<p>The environment communicates the possible actions to the agent and provides
+an interface to interact and observe changes in the state of the game.</p>
+<dl class="attribute">
+<dt id="AtariEnv.ALL_ACTIONS">
+<code class="descname">ALL_ACTIONS</code><a class="headerlink" href="#AtariEnv.ALL_ACTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Dict</em> &#8211; Dictionary that has the action ID as keys and the action name as values.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.game">
+<code class="descname">game</code><a class="headerlink" href="#AtariEnv.game" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Name of the game to load into the emulator.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.gym">
+<code class="descname">gym</code><a class="headerlink" href="#AtariEnv.gym" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; OpenAI Gym environment with the selected game.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.train_all">
+<code class="descname">train_all</code><a class="headerlink" href="#AtariEnv.train_all" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Indicates if the network uses all possible actions as output or only the available ones.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.avail_actions">
+<code class="descname">avail_actions</code><a class="headerlink" href="#AtariEnv.avail_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; The IDs of the availabe actions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.n_avail_actions">
+<code class="descname">n_avail_actions</code><a class="headerlink" href="#AtariEnv.n_avail_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of available actions for the agent to select for a specific environment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.avail_actions_indices">
+<code class="descname">avail_actions_indices</code><a class="headerlink" href="#AtariEnv.avail_actions_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple</em> &#8211; Array with size of n_avail_actions with numbers from n</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.counts_lives">
+<code class="descname">counts_lives</code><a class="headerlink" href="#AtariEnv.counts_lives" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Indicates if the game has more than one live until game over.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.just_lost_live">
+<code class="descname">just_lost_live</code><a class="headerlink" href="#AtariEnv.just_lost_live" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Indicates if the agent has just lost a live.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.current_lives">
+<code class="descname">current_lives</code><a class="headerlink" href="#AtariEnv.current_lives" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of available lives until game over.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.current_frame">
+<code class="descname">current_frame</code><a class="headerlink" href="#AtariEnv.current_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; The current frame as provided by the gym environment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.terminal_state">
+<code class="descname">terminal_state</code><a class="headerlink" href="#AtariEnv.terminal_state" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Indicates if game over or not.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariEnv.frame_dims">
+<code class="descname">frame_dims</code><a class="headerlink" href="#AtariEnv.frame_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; Height and width of the current frame.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">More attributes of this class are defined in the base class Environment.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.envs.atarienv.AtariEnv.get_current_frame">
+<code class="descname">get_current_frame</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/atarienv.html#AtariEnv.get_current_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.atarienv.AtariEnv.get_current_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if there actually is current frame and if so return it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>current_frame</strong> &#8211; The current frame as provided by the gym environment.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple[int]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.envs.atarienv.AtariEnv.has_just_lost_live">
+<code class="descname">has_just_lost_live</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/atarienv.html#AtariEnv.has_just_lost_live"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.atarienv.AtariEnv.has_just_lost_live" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the agent has just lost a live.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>just_lost_live</strong> &#8211; Indicates if the agent has just lost a live.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.envs.atarienv.AtariEnv.is_state_terminal">
+<code class="descname">is_state_terminal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/atarienv.html#AtariEnv.is_state_terminal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.atarienv.AtariEnv.is_state_terminal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the terminal state indicator is set and if so return it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>terminal_state</strong> &#8211; Indicates if game over or not.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.envs.atarienv.AtariEnv.reset_env">
+<code class="descname">reset_env</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/atarienv.html#AtariEnv.reset_env"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.atarienv.AtariEnv.reset_env" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the game parameters to start a new game.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.envs.atarienv.AtariEnv.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/envs/atarienv.html#AtariEnv.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.envs.atarienv.AtariEnv.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an action and observe the resulting state.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>action</strong> (<em>int</em>) &#8211; Selected action ID to perform in envirnoment.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>reward</strong> &#8211; The change of score after performing the action.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="learner.html" class="btn btn-neutral float-right" title="Learner Classes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="agent.html" class="btn btn-neutral" title="Agent" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,492 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepatari.learner.dqnneon &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../help/install.html">Installation guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/memory.html">Memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/statistics.html">Statistics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>deepatari.learner.dqnneon</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepatari.learner.dqnneon</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">neon.util.argparser</span> <span class="kn">import</span> <span class="n">NeonArgparser</span>
+<span class="kn">from</span> <span class="nn">neon.backends</span> <span class="kn">import</span> <span class="n">gen_backend</span>
+<span class="kn">from</span> <span class="nn">neon.initializers</span> <span class="kn">import</span> <span class="n">Gaussian</span>
+<span class="kn">from</span> <span class="nn">neon.optimizers</span> <span class="kn">import</span> <span class="n">RMSProp</span><span class="p">,</span> <span class="n">Adam</span><span class="p">,</span> <span class="n">Adadelta</span>
+<span class="kn">from</span> <span class="nn">neon.layers</span> <span class="kn">import</span> <span class="n">Affine</span><span class="p">,</span> <span class="n">Conv</span><span class="p">,</span> <span class="n">GeneralizedCost</span>
+<span class="kn">from</span> <span class="nn">neon.transforms</span> <span class="kn">import</span> <span class="n">Rectlin</span>
+<span class="kn">from</span> <span class="nn">neon.models</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">neon.transforms</span> <span class="kn">import</span> <span class="n">SumSquared</span>
+<span class="kn">from</span> <span class="nn">neon.util.persist</span> <span class="kn">import</span> <span class="n">save_obj</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">.learner</span> <span class="kn">import</span> <span class="n">Learner</span>
+
+
+<div class="viewcode-block" id="DQNNeon"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnneon.DQNNeon">[docs]</a><span class="k">class</span> <span class="nc">DQNNeon</span><span class="p">(</span><span class="n">Learner</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class is an implementation of the DQN network based on Neon.</span>
+
+<span class="sd">    The modules that interact with the agent, the replay memory and the</span>
+<span class="sd">    statistic calls are implemented here, taking the individual requirements</span>
+<span class="sd">    of the Lasagne framework into account. The code is adapted from:</span>
+<span class="sd">    https://github.com/tambetm/simple_dqn</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        input_shape (tuple[int]): Dimension of the network input.</span>
+<span class="sd">        dummy_batch (numpy.ndarray): Dummy batche used to calculate Q-values for single states.</span>
+<span class="sd">        batch_norm (bool): Indicates if normalization is wanted for a certain layer (default=False).</span>
+<span class="sd">        be (neon.backends.nervanagpu.NervanaGPU): Describes the backend for the Neon implementation.</span>
+<span class="sd">        input (neon.backends.nervanagpu.GPUTensor): Definition of network input shape.</span>
+<span class="sd">        targets(neon.backends.nervanagpu.GPUTensor): Definition of network output shape.</span>
+<span class="sd">        model (neon.models.model.Model): Generated Neon model.</span>
+<span class="sd">        target_model (neon.models.model.Model): Generated target Neon model.</span>
+<span class="sd">        cost_func (neon.layers.layer.GeneralizedCost): Cost function for model training.</span>
+<span class="sd">        callback (Statistics): Hook for the statistics object to pass train and test information.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        More attributes of this class are defined in the base class Learner.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;DQNNeon&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a network based on the Neon framework.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env (AtariEnv): The envirnoment in which the agent actuates.</span>
+<span class="sd">            args (argparse.Namespace): All settings either with a default value or set via command line arguments.</span>
+<span class="sd">            rng (mtrand.RandomState): initialized Mersenne Twister pseudo-random number generator.</span>
+<span class="sd">            name (str): The name of the network object.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This function should always call the base class first to initialize</span>
+<span class="sd">            the common values for the networks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing new object of type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DQNNeon</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_length</span><span class="p">,)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_dims</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dummy_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_length</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_dims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">batch_norm</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">be</span> <span class="o">=</span> <span class="n">gen_backend</span><span class="p">(</span>
+                <span class="n">backend</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span>
+                <span class="n">batch_size</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+                <span class="n">rng_seed</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">random_seed</span><span class="p">,</span>
+                <span class="n">device_id</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">device_id</span><span class="p">,</span>
+                <span class="n">datatype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">datatype</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                <span class="n">stochastic_round</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">stochastic_round</span><span class="p">)</span>
+
+        <span class="c1"># prepare tensors once and reuse them</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">be</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">lshape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="c1"># HACK: needed for convolutional networks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">be</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">))</span>
+
+        <span class="c1"># create model</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_layer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">layers</span> <span class="o">=</span> <span class="n">layers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_func</span> <span class="o">=</span> <span class="n">GeneralizedCost</span><span class="p">(</span><span class="n">costfunc</span> <span class="o">=</span> <span class="n">SumSquared</span><span class="p">())</span>
+        <span class="c1"># Bug fix</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">=</span> <span class="s1">&#39;Disabled&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_func</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_optimizer</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">load_weights</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">load_weights</span><span class="p">)</span>
+
+        <span class="c1"># create target model</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_update_frequency</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_layer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span>
+            <span class="c1"># Bug fix</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+                <span class="n">l</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">=</span> <span class="s1">&#39;Disabled&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Build a network consistent with the DeepMind Nature paper. &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Output shape = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">)</span>
+        <span class="c1"># create network</span>
+        <span class="n">init_norm</span> <span class="o">=</span> <span class="n">Gaussian</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># The first hidden layer convolves 32 filters of 8x8 with stride 4 with the input image and applies a rectifier nonlinearity.</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Conv</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
+                <span class="n">strides</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">init</span><span class="o">=</span><span class="n">init_norm</span><span class="p">,</span>
+                <span class="n">activation</span><span class="o">=</span><span class="n">Rectlin</span><span class="p">(),</span>
+                <span class="n">batch_norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">))</span>
+        <span class="c1"># The second hidden layer convolves 64 filters of 4x4 with stride 2, again followed by a rectifier nonlinearity.</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Conv</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+                <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                <span class="n">init</span><span class="o">=</span><span class="n">init_norm</span><span class="p">,</span>
+                <span class="n">activation</span><span class="o">=</span><span class="n">Rectlin</span><span class="p">(),</span>
+                <span class="n">batch_norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">))</span>
+        <span class="c1"># This is followed by a third convolutional layer that convolves 64 filters of 3x3 with stride 1 followed by a rectifier.</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Conv</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+                <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">init</span><span class="o">=</span><span class="n">init_norm</span><span class="p">,</span>
+                <span class="n">activation</span><span class="o">=</span><span class="n">Rectlin</span><span class="p">(),</span>
+                <span class="n">batch_norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">))</span>
+        <span class="c1"># The final hidden layer is fully-connected and consists of 512 rectifier units.</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Affine</span><span class="p">(</span>
+                    <span class="n">nout</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                    <span class="n">init</span><span class="o">=</span><span class="n">init_norm</span><span class="p">,</span>
+                    <span class="n">activation</span><span class="o">=</span><span class="n">Rectlin</span><span class="p">(),</span>
+                    <span class="n">batch_norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_norm</span><span class="p">))</span>
+        <span class="c1"># The output layer is a fully-connected linear layer with a single output for each valid action.</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Affine</span><span class="p">(</span>
+                    <span class="n">nout</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span>
+                    <span class="n">init</span> <span class="o">=</span> <span class="n">init_norm</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">layers</span>
+
+    <span class="k">def</span> <span class="nf">_set_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes the selected optimization algorithm. &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Optimizer = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;rmsprop&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">RMSProp</span><span class="p">(</span>
+                    <span class="n">learning_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span>
+                    <span class="n">decay_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">decay_rate</span><span class="p">,</span>
+                    <span class="n">stochastic_round</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">stochastic_round</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;adam&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span>
+                    <span class="n">learning_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span>
+                    <span class="n">stochastic_round</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">stochastic_round</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;adadelta&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">Adadelta</span><span class="p">(</span>
+                    <span class="n">decay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">decay_rate</span><span class="p">,</span>
+                    <span class="n">stochastic_round</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">stochastic_round</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">false</span><span class="p">,</span> <span class="s2">&quot;Unknown optimizer&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_prepare_network_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Transforms and normalizes the states from one minibatch.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            states (): a set of states with the size of minibatch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Normalizing and transforming input&quot;</span><span class="p">)</span>
+        <span class="c1"># change order of axes to match what Neon expects</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="c1"># copy() shouldn&#39;t be necessary here, but Neon doesn&#39;t work otherwise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">states</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+        <span class="c1"># normalize network input between 0 and 1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">be</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grayscales</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DQNNeon.train"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnneon.DQNNeon.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prepare, perform and document a complete train step for one minibatch.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            minibatch (numpy.ndarray): Mini-batch of states, shape=(batch_size,sequence_length,frame_width,frame_height)</span>
+<span class="sd">            epoch (int): Current train epoch</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Complete trainig step for one minibatch&quot;</span><span class="p">)</span>
+        <span class="n">prestates</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">poststates</span><span class="p">,</span> <span class="n">terminals</span> <span class="o">=</span> <span class="n">minibatch</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">prestates</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">poststates</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rewards</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">terminals</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">prestates</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">poststates</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">assert</span> <span class="n">prestates</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">actions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">rewards</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">poststates</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">terminals</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># feed-forward pass for poststates to get Q-values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_network_input</span><span class="p">(</span><span class="n">poststates</span><span class="p">)</span>
+        <span class="n">postq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span><span class="o">.</span><span class="n">fprop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">inference</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">postq</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="c1"># calculate max Q-value for each poststate</span>
+        <span class="n">maxpostq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">be</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">postq</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">asnumpyarray</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">maxpostq</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="c1"># average maxpostq for stats</span>
+        <span class="n">maxpostq_avg</span> <span class="o">=</span> <span class="n">maxpostq</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="c1"># feed-forward pass for prestates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_network_input</span><span class="p">(</span><span class="n">prestates</span><span class="p">)</span>
+        <span class="n">preq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fprop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">inference</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">preq</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="c1"># make copy of prestate Q-values as targets</span>
+        <span class="n">targets</span> <span class="o">=</span> <span class="n">preq</span><span class="o">.</span><span class="n">asnumpyarray</span><span class="p">()</span>
+        <span class="c1"># clip rewards between -1 and 1</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">rewards</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_reward</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_reward</span><span class="p">)</span>
+        <span class="c1"># update Q-value targets for each state only at actions taken</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">actions</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">terminals</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">targets</span><span class="p">[</span><span class="n">action</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">rewards</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">targets</span><span class="p">[</span><span class="n">action</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">rewards</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span> <span class="o">*</span> <span class="n">maxpostq</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># copy targets to GPU memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+        <span class="c1"># calculate errors</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_func</span><span class="o">.</span><span class="n">get_errors</span><span class="p">(</span><span class="n">preq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">errors</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="c1"># average error where there is a error (should be 1 in every row)</span>
+        <span class="c1">#TODO: errors_avg = np.sum(errors)/np.size(errors[errors&gt;0.])</span>
+        <span class="c1"># clip errors</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip_error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">be</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">clip_error</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip_error</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">errors</span><span class="p">)</span>
+        <span class="c1"># calculate cost, just in case</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_func</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">preq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">cost</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># perform back-propagation of gradients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">bprop</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+        <span class="c1"># perform optimization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">layers_to_optimize</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+        <span class="c1"># increase number of weight updates (needed for target clone interval)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_iterations</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_update_frequency</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_iterations</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_update_frequency</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_theta</span><span class="p">()</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Network update #</span><span class="si">%d</span><span class="s2">: Cost = </span><span class="si">%s</span><span class="s2">, Avg Max Q-value = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_iterations</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">asnumpyarray</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">maxpostq_avg</span><span class="p">)))</span>
+        <span class="c1"># update statistics</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="o">.</span><span class="n">from_learner</span><span class="p">(</span><span class="n">cost</span><span class="o">.</span><span class="n">asnumpyarray</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">maxpostq_avg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DQNNeon.get_Q"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnneon.DQNNeon.get_Q">[docs]</a>    <span class="k">def</span> <span class="nf">get_Q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Calculates the Q-values for one mini-batch.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(numpy.ndarray): Single state, shape=(sequence_length,frame_width,frame_height).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            q_values (numpy.ndarray): Results for first element of mini-batch from one forward pass through the network, shape=(self.output_shape,)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;State shape = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+        <span class="c1"># minibatch is full size, because Neon doesn&#39;t let change the minibatch size</span>
+        <span class="c1"># so we need to run 32 forward steps to get the one we actually want</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dummy_batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy_batch</span>
+        <span class="k">assert</span> <span class="n">states</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_length</span><span class="p">,)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_dims</span><span class="p">)</span>
+        <span class="c1"># calculate Q-values for the states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_network_input</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="n">qvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fprop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">inference</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">qvalues</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Qvalues: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">qvalues</span><span class="o">.</span><span class="n">asnumpyarray</span><span class="p">()[:,</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="k">return</span> <span class="n">qvalues</span><span class="o">.</span><span class="n">asnumpyarray</span><span class="p">()[:,</span><span class="mi">0</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_copy_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Copies the weights of the current network to the target network. &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Copying weights&quot;</span><span class="p">)</span>
+        <span class="n">pdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_description</span><span class="p">(</span><span class="n">get_weights</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">keep_states</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_model</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">pdict</span><span class="p">,</span> <span class="n">load_states</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DQNNeon.save_weights"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnneon.DQNNeon.save_weights">[docs]</a>    <span class="k">def</span> <span class="nf">save_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Saves the current network parameters to disk.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_dir (str): Directory where the network parameters are stored for each episode.</span>
+<span class="sd">            epoch (int): Current epoch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">_</span><span class="si">%d</span><span class="s2">.prm&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">net_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DQNNeon.load_weights"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnneon.DQNNeon.load_weights">[docs]</a>    <span class="k">def</span> <span class="nf">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Loads the network parameters from a given file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source_file (str): Complete path to a file with network parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_params</span><span class="p">(</span><span class="n">source_file</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

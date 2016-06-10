@@ -1,0 +1,346 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Experiment Classes &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Agent" href="agent.html"/>
+        <link rel="prev" title="Installation guide" href="../help/install.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html">Installation guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Experiment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#experiment-base-class">Experiment - Base class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atariexp">AtariExp</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">Experiment</span> <span class="pre">Classes</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/experiment.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="experiment-classes">
+<span id="experiment"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">Experiment</span> <span class="pre">Classes</span></code><a class="headerlink" href="#experiment-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="experiment-base-class">
+<h2>Experiment - Base class<a class="headerlink" href="#experiment-base-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.experiments.experiment.Experiment">
+<em class="property">class </em><code class="descclassname">deepatari.experiments.experiment.</code><code class="descname">Experiment</code><span class="sig-paren">(</span><em>args</em>, <em>name</em>, <em>target_dir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/experiments/experiment.html#Experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.experiments.experiment.Experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the base class for all experiment implementations.</p>
+<p>The experiment organizes all objects and directs the training in a given
+scenario.</p>
+<dl class="attribute">
+<dt id="Experiment.name">
+<code class="descname">name</code><a class="headerlink" href="#Experiment.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of the network object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.args">
+<code class="descname">args</code><a class="headerlink" href="#Experiment.args" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>argparse.Namespace</em> &#8211; All settings either default or set via command line arguments.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.target_dir">
+<code class="descname">target_dir</code><a class="headerlink" href="#Experiment.target_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Directory where all logs are stored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.rng">
+<code class="descname">rng</code><a class="headerlink" href="#Experiment.rng" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mtrand.RandomState</em> &#8211; Initialized Mersenne Twister pseudo-random number generator.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.env">
+<code class="descname">env</code><a class="headerlink" href="#Experiment.env" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Environment</em> &#8211; The envirnoment in which the agent actuates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.mem">
+<code class="descname">mem</code><a class="headerlink" href="#Experiment.mem" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Memory</em> &#8211; The replay memory to save the experiences.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.net">
+<code class="descname">net</code><a class="headerlink" href="#Experiment.net" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Learner</em> &#8211; Object of one of the Learner modules.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.agent">
+<code class="descname">agent</code><a class="headerlink" href="#Experiment.agent" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Agent</em> &#8211; The agent that performes the learning.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Experiment.stats">
+<code class="descname">stats</code><a class="headerlink" href="#Experiment.stats" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Statistics</em> &#8211; The stats module that attaches itself to the experiment objects.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All subclasses must inherite this class &#8211;&gt; &#8216;class NewClass(Experiment)&#8217;</p>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="atariexp">
+<h2>AtariExp<a class="headerlink" href="#atariexp" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.experiments.atariexp.AtariExp">
+<em class="property">class </em><code class="descclassname">deepatari.experiments.atariexp.</code><code class="descname">AtariExp</code><span class="sig-paren">(</span><em>args</em>, <em>name='AtariExperiment'</em>, <em>target_dir=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/experiments/atariexp.html#AtariExp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.experiments.atariexp.AtariExp" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is an implementation of an Atari experiment.</p>
+<p>The experiment organizes all objects and directs the training in an Atari
+Game playing scenario.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">More attributes of this class are defined in the base class Experiment.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.experiments.atariexp.AtariExp.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/experiments/atariexp.html#AtariExp.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.experiments.atariexp.AtariExp.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a complete experiment.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>success</strong> &#8211; After a successfull run returns with True.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.experiments.atariexp.AtariExp.test">
+<code class="descname">test</code><span class="sig-paren">(</span><em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/experiments/atariexp.html#AtariExp.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.experiments.atariexp.AtariExp.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the stats and call the agent test function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>epoch</strong> (<em>int</em>) &#8211; Number of current epoch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.experiments.atariexp.AtariExp.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/experiments/atariexp.html#AtariExp.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.experiments.atariexp.AtariExp.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the stats and call the agent train function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>epoch</strong> (<em>int</em>) &#8211; Number of current epoch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="agent.html" class="btn btn-neutral float-right" title="Agent" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../help/install.html" class="btn btn-neutral" title="Installation guide" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

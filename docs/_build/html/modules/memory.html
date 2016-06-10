@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Memory Classes &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Statistics" href="statistics.html"/>
+        <link rel="prev" title="Learner Classes" href="learner.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html">Installation guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learner.html">Learner</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Memory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#memory-base-class">Memory - Base class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#replaymemory">ReplayMemory</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">Memory</span> <span class="pre">Classes</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/memory.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="memory-classes">
+<span id="memory"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">Memory</span> <span class="pre">Classes</span></code><a class="headerlink" href="#memory-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="memory-base-class">
+<h2>Memory - Base class<a class="headerlink" href="#memory-base-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.memory.memory.Memory">
+<em class="property">class </em><code class="descclassname">deepatari.memory.memory.</code><code class="descname">Memory</code><span class="sig-paren">(</span><em>args</em>, <em>avail_actions</em>, <em>rng</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/memory/memory.html#Memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.memory.memory.Memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the base class for all memory implementations.</p>
+<p>The agent stores its experiences in the memory and the learner uses it as a
+source for training examples.</p>
+<dl class="attribute">
+<dt id="Memory.name">
+<code class="descname">name</code><a class="headerlink" href="#Memory.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of the network object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.memory_size">
+<code class="descname">memory_size</code><a class="headerlink" href="#Memory.memory_size" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Maximum elements in replay memory.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.actions">
+<code class="descname">actions</code><a class="headerlink" href="#Memory.actions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Action memory allocation of shape=(memory_size,).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.rewards">
+<code class="descname">rewards</code><a class="headerlink" href="#Memory.rewards" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Rewards memory allocation of shape=(memory_size,).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.frames">
+<code class="descname">frames</code><a class="headerlink" href="#Memory.frames" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Frame memory allocation of shape=(memory_size, frame_height, frame_width).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.terminals">
+<code class="descname">terminals</code><a class="headerlink" href="#Memory.terminals" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Terminal state indicator memory allocation of shape=(memory_size,).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.sequence_length">
+<code class="descname">sequence_length</code><a class="headerlink" href="#Memory.sequence_length" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Determines how many frames form a state.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.frame_dims">
+<code class="descname">frame_dims</code><a class="headerlink" href="#Memory.frame_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; Dimension of the resized frames.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.batch_size">
+<code class="descname">batch_size</code><a class="headerlink" href="#Memory.batch_size" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Size of the mini-batch for one learning step.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.count">
+<code class="descname">count</code><a class="headerlink" href="#Memory.count" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Current number of elements in the replay memory.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.current">
+<code class="descname">current</code><a class="headerlink" href="#Memory.current" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Current index in the replay memory.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.train_all">
+<code class="descname">train_all</code><a class="headerlink" href="#Memory.train_all" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Use all possible actions or minimum set for training.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.avail_actions">
+<code class="descname">avail_actions</code><a class="headerlink" href="#Memory.avail_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of possible actions the agent can use.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.prestates">
+<code class="descname">prestates</code><a class="headerlink" href="#Memory.prestates" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Prestate memory allocation of shape=(batch_size, sequence_length, frame_height, frame_width).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.poststates">
+<code class="descname">poststates</code><a class="headerlink" href="#Memory.poststates" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Poststate memory allocation of shape=(batch_size, sequence_length, frame_height, frame_width).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Memory.rng">
+<code class="descname">rng</code><a class="headerlink" href="#Memory.rng" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mtrand.RandomState</em> &#8211; Initialized Mersenne Twister pseudo-random number generator.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All subclasses must inherite this class &#8211;&gt; &#8216;class NewClass(Memory)&#8217;</p>
+</div>
+<dl class="method">
+<dt id="deepatari.memory.memory.Memory.add">
+<code class="descname">add</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/memory/memory.html#Memory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.memory.memory.Memory.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual add function for each subclass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.memory.memory.Memory.get_minibatch">
+<code class="descname">get_minibatch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/memory/memory.html#Memory.get_minibatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.memory.memory.Memory.get_minibatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual get_minibatch function for each subclass.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="replaymemory">
+<h2>ReplayMemory<a class="headerlink" href="#replaymemory" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.memory.replaymemory.ReplayMemory">
+<em class="property">class </em><code class="descclassname">deepatari.memory.replaymemory.</code><code class="descname">ReplayMemory</code><span class="sig-paren">(</span><em>args</em>, <em>avail_actions</em>, <em>rng</em>, <em>name='ReplayMemory'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/memory/replaymemory.html#ReplayMemory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.memory.replaymemory.ReplayMemory" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is an implementation of a simple replay memory.</p>
+<p>This memory is a simple stack and mini-batches get selected randomly from
+the whole memory of size memory_size. There are no preferences for
+obersavtions with more reward or higher probability.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">More attributes of this class are defined in the base class Memory.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.memory.replaymemory.ReplayMemory.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>action</em>, <em>reward</em>, <em>frame</em>, <em>terminal</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/memory/replaymemory.html#ReplayMemory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.memory.replaymemory.ReplayMemory.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a full observation to the simple replay memory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>action</strong> (<em>int</em>) &#8211; The action that was chosen.</li>
+<li><strong>reward</strong> (<em>int</em>) &#8211; The reward received after taking the action.</li>
+<li><strong>frame</strong> (<em>numpy.ndarray</em>) &#8211; The new frame received after taking the action, shape=(frame_height, frame_width).</li>
+<li><strong>terminal</strong> (<em>bool</em>) &#8211; The new terminal state indicator after taking the action.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.memory.replaymemory.ReplayMemory.get_minibatch">
+<code class="descname">get_minibatch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/memory/replaymemory.html#ReplayMemory.get_minibatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.memory.replaymemory.ReplayMemory.get_minibatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects indices from the memory and gets the full observation for each of those indices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>prestates</strong> &#8211; Collected prestates of shape=(batch_size, sequence_length, frame_height, frame_width).
+actions (numpy.ndarray): Collected actions of shape=(batch_size,).
+rewards (numpy.ndarray): Collected rewards of shape=(batch_size,).
+poststates (numpy.ndarray): Collected poststates of shape=(batch_size, sequence_length, frame_height, frame_width).
+terminals (numpy.ndarray): Collected terminal state indicators of shape=(batch_size,).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="statistics.html" class="btn btn-neutral float-right" title="Statistics" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="learner.html" class="btn btn-neutral" title="Learner Classes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

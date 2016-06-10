@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Agent Classes &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Environment Classes" href="environment.html"/>
+        <link rel="prev" title="Experiment Classes" href="experiment.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html">Installation guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Agent</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#agent-base-class">Agent - Base class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#atariagent">AtariAgent</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">Agent</span> <span class="pre">Classes</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/agent.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="agent-classes">
+<span id="agent"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">Agent</span> <span class="pre">Classes</span></code><a class="headerlink" href="#agent-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="agent-base-class">
+<h2>Agent - Base class<a class="headerlink" href="#agent-base-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.agents.agent.Agent">
+<em class="property">class </em><code class="descclassname">deepatari.agents.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>env</em>, <em>mem</em>, <em>net</em>, <em>args</em>, <em>rng</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/agent.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the base class for all agent implementations.</p>
+<p>The agent gets its available actions from the environment, keeps track of
+his current state and saves his experiences in a replay memory while acting
+in the environment.</p>
+<dl class="attribute">
+<dt id="Agent.name">
+<code class="descname">name</code><a class="headerlink" href="#Agent.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of the network object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.env">
+<code class="descname">env</code><a class="headerlink" href="#Agent.env" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Environment</em> &#8211; The envirnoment in which the agent actuates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.mem">
+<code class="descname">mem</code><a class="headerlink" href="#Agent.mem" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Memory</em> &#8211; The replay memory to save the experiences.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.net">
+<code class="descname">net</code><a class="headerlink" href="#Agent.net" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Learner</em> &#8211; Object of one of the Learner modules.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.rng">
+<code class="descname">rng</code><a class="headerlink" href="#Agent.rng" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mtrand.RandomState</em> &#8211; Initialized Mersenne Twister pseudo-random number generator.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.n_steps_total">
+<code class="descname">n_steps_total</code><a class="headerlink" href="#Agent.n_steps_total" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Counter of all training steps.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.callback">
+<code class="descname">callback</code><a class="headerlink" href="#Agent.callback" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Statistics</em> &#8211; The stats module that attaches itself to the agent.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All subclasses must inherite this class &#8211;&gt; &#8216;class NewClass(Agent)&#8217;</p>
+</div>
+<dl class="method">
+<dt id="deepatari.agents.agent.Agent.play">
+<code class="descname">play</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/agent.html#Agent.play"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.agent.Agent.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual play function for each subclass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.agent.Agent.populate_mem">
+<code class="descname">populate_mem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/agent.html#Agent.populate_mem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.agent.Agent.populate_mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual populate_mem function for each subclass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.agent.Agent.step">
+<code class="descname">step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/agent.html#Agent.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.agent.Agent.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual step function for each subclass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.agent.Agent.test">
+<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/agent.html#Agent.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.agent.Agent.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual test function for each subclass</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.agent.Agent.train">
+<code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/agent.html#Agent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.agent.Agent.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual train function for each subclass</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="atariagent">
+<h2>AtariAgent<a class="headerlink" href="#atariagent" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.agents.atariagent.AtariAgent">
+<em class="property">class </em><code class="descclassname">deepatari.agents.atariagent.</code><code class="descname">AtariAgent</code><span class="sig-paren">(</span><em>env</em>, <em>mem</em>, <em>net</em>, <em>args</em>, <em>rng</em>, <em>name='AtariAgent'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/atariagent.html#AtariAgent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.atariagent.AtariAgent" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is an implementation of an Atari agent.</p>
+<p>The agent interacts with the given environment, organizes the trainig of the
+network and sends information to the statistics.</p>
+<dl class="attribute">
+<dt id="AtariAgent.buf">
+<code class="descname">buf</code><a class="headerlink" href="#AtariAgent.buf" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>AtariStateBuffer</em> &#8211; Simple buffer of sequence_length to concatenate frames to form the current state.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.n_avail_actions">
+<code class="descname">n_avail_actions</code><a class="headerlink" href="#AtariAgent.n_avail_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of available actions for the agent to select for a specific environment.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.avail_actions">
+<code class="descname">avail_actions</code><a class="headerlink" href="#AtariAgent.avail_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; The IDs of the availabe actions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.train_all">
+<code class="descname">train_all</code><a class="headerlink" href="#AtariAgent.train_all" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Indicates if the network uses all possible actions as output or only the available ones.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.random_starts">
+<code class="descname">random_starts</code><a class="headerlink" href="#AtariAgent.random_starts" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Perform max this number of dummy actions at beginning of an episode to produce more random game dynamics.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.sequence_length">
+<code class="descname">sequence_length</code><a class="headerlink" href="#AtariAgent.sequence_length" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Determines how many frames form a state.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.epsilon_start">
+<code class="descname">epsilon_start</code><a class="headerlink" href="#AtariAgent.epsilon_start" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Start value of the exploration rate (epsilon).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.epsilon_end">
+<code class="descname">epsilon_end</code><a class="headerlink" href="#AtariAgent.epsilon_end" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Final value of the exploration rate (epsilon).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.epsilon_decay_steps">
+<code class="descname">epsilon_decay_steps</code><a class="headerlink" href="#AtariAgent.epsilon_decay_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of steps from epsilon_start to epsilon_end.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.epsilon_test">
+<code class="descname">epsilon_test</code><a class="headerlink" href="#AtariAgent.epsilon_test" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Exploration rate (epsilon) during the test phase.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.train_frequency">
+<code class="descname">train_frequency</code><a class="headerlink" href="#AtariAgent.train_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Perform training after this many game steps.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="AtariAgent.train_repeat">
+<code class="descname">train_repeat</code><a class="headerlink" href="#AtariAgent.train_repeat" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Number of times to sample minibatch during training.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">More attributes of this class are defined in the base class Agent.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.agents.atariagent.AtariAgent.play">
+<code class="descname">play</code><span class="sig-paren">(</span><em>num_games</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/atariagent.html#AtariAgent.play"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.atariagent.AtariAgent.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plays the game for a num_games times.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_games</strong> (<em>int</em>) &#8211; The number of games to play until stop.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.atariagent.AtariAgent.populate_mem">
+<code class="descname">populate_mem</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/atariagent.html#AtariAgent.populate_mem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.atariagent.AtariAgent.populate_mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Play a given number of steps to prefill the replay memory</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>size</strong> (<em>int</em>) &#8211; The desired size of the memory initialization.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.atariagent.AtariAgent.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/atariagent.html#AtariAgent.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.atariagent.AtariAgent.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform one step in the environment, send the results to the buffer and update the stats.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>epsilon</strong> (<em>float</em>) &#8211; The current epsilon value.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.atariagent.AtariAgent.test">
+<code class="descname">test</code><span class="sig-paren">(</span><em>steps</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/atariagent.html#AtariAgent.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.atariagent.AtariAgent.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a complete testing epoch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>steps</strong> (<em>int</em>) &#8211; The number of steps.</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; The current epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.agents.atariagent.AtariAgent.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>steps</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/agents/atariagent.html#AtariAgent.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.agents.atariagent.AtariAgent.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a complete training epoch, filling the replay memory and calling the network train function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>steps</strong> (<em>int</em>) &#8211; The number of steps.</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; The current epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="environment.html" class="btn btn-neutral float-right" title="Environment Classes" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="experiment.html" class="btn btn-neutral" title="Experiment Classes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

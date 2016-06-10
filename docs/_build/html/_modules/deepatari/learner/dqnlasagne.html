@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepatari.learner.dqnlasagne &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../help/install.html">Installation guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/memory.html">Memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/statistics.html">Statistics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>deepatari.learner.dqnlasagne</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepatari.learner.dqnlasagne</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">lasagne</span>
+<span class="kn">from</span> <span class="nn">lasagne.layers</span> <span class="kn">import</span> <span class="n">dnn</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">theano</span>
+<span class="kn">import</span> <span class="nn">theano.tensor</span> <span class="kn">as</span> <span class="nn">T</span>
+
+<span class="kn">from</span> <span class="nn">.learner</span> <span class="kn">import</span> <span class="n">Learner</span>
+
+<div class="viewcode-block" id="DQNLasagne"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnlasagne.DQNLasagne">[docs]</a><span class="k">class</span> <span class="nc">DQNLasagne</span><span class="p">(</span><span class="n">Learner</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class is an implementation of the DQN network based on the Lasagne Theano framework.</span>
+
+<span class="sd">    The modules that interact with the agent, the replay memory and the</span>
+<span class="sd">    statistic calls are implemented here, taking the individual requirements</span>
+<span class="sd">    of the Lasagne framework into account. The code is adapted from:</span>
+<span class="sd">    https://github.com/spragunr/deep_q_rl</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        input_shape (tuple[int]): Dimension of the network input.</span>
+<span class="sd">        dummy_batch (numpy.ndarray): Dummy batche used to calculate Q-values for single states.</span>
+<span class="sd">        network (lasagne.layers.dense.DenseLayer): Structure of the neural network.</span>
+<span class="sd">        target_network (lasagne.layers.dense.DenseLayer): Structure of the target neural network.</span>
+<span class="sd">        states_shared (theano.sandbox.cuda.var.CudaNdarraySharedVariable): Interface to CUDA allocated array for states.</span>
+<span class="sd">        followup_states_shared (theano.sandbox.cuda.var.CudaNdarraySharedVariable): Interface to CUDA allocated array for followup-states.</span>
+<span class="sd">        rewards_shared (theano.sandbox.cuda.var.CudaNdarraySharedVariable): Interface to CUDA allocated array for rewards.</span>
+<span class="sd">        actions_shared (theano.sandbox.cuda.var.CudaNdarraySharedVariable): Interface to CUDA allocated array for actions.</span>
+<span class="sd">        terminals_shared (theano.sandbox.cuda.var.CudaNdarraySharedVariable): Interface to CUDA allocated array for terminal state indicators.</span>
+<span class="sd">        params (list): Network parameter.</span>
+<span class="sd">        observations (dict): Dictionary for all shared variables for the theano train function.</span>
+<span class="sd">        _theano_train (theano.compile.function_module.Function): Theano function that implements a full training step for one mini-batch and returns the Q-values and the costs.</span>
+<span class="sd">        _theano_get_Q (theano.compile.function_module.Function): Theano function that calculates one forward pass through the network for a mini-batch and returns the Q-value.</span>
+<span class="sd">        callback (Statistics): Hook for the statistics object to pass train and test information.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        More attributes of this class are defined in the base class Learner.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;DQNLasagne&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a network based on the Lasagne Theano framework.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env (AtariEnv): The envirnoment in which the agent actuates.</span>
+<span class="sd">            args (argparse.Namespace): All settings either with a default value or set via command line arguments.</span>
+<span class="sd">            rng (mtrand.RandomState): Initialized Mersenne Twister pseudo-random number generator.</span>
+<span class="sd">            name (str): The name of the network object.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This function should always call the base class first to initialize</span>
+<span class="sd">            the common values for the networks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initialize object of type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DQNLasagne</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_length</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">frame_width</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">frame_height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dummy_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">lasagne</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_layer</span><span class="p">()</span>
+
+        <span class="c1"># TODO: Load weights from pretrained network?!</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">load_weights</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">load_weights</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_update_frequency</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_network</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_layer</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_theta</span><span class="p">()</span>
+
+        <span class="n">states</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">tensor4</span><span class="p">(</span><span class="s1">&#39;states&#39;</span><span class="p">)</span>
+        <span class="n">followup_states</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">tensor4</span><span class="p">(</span><span class="s1">&#39;followup_states&#39;</span><span class="p">)</span>
+        <span class="n">rewards</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;rewards&#39;</span><span class="p">)</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="s1">&#39;actions&#39;</span><span class="p">)</span>
+        <span class="n">terminals</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">icol</span><span class="p">(</span><span class="s1">&#39;terminals&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">states_shared</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">theano</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">followup_states_shared</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">theano</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">floatX</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rewards_shared</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">theano</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">floatX</span><span class="p">),</span>
+                <span class="n">broadcastable</span><span class="o">=</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions_shared</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">),</span>
+                <span class="n">broadcastable</span><span class="o">=</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">terminals_shared</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">shared</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">),</span>
+                <span class="n">broadcastable</span><span class="o">=</span><span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">qvalues</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_network_input</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_update_frequency</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">qvalues_followup_states</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">target_network</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_network_input</span><span class="p">(</span><span class="n">followup_states</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">qvalues_followup_states</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">get_output</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_network_input</span><span class="p">(</span><span class="n">followup_states</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">qvalues_followup_states</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">gradient</span><span class="o">.</span><span class="n">disconnected_grad</span><span class="p">(</span><span class="n">qvalues_followup_states</span><span class="p">)</span>
+
+        <span class="n">targets</span> <span class="o">=</span> <span class="p">(</span><span class="n">rewards</span> <span class="o">+</span>
+                <span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">terminals</span><span class="p">)</span> <span class="o">-</span> <span class="n">terminals</span><span class="p">)</span> <span class="o">*</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span> <span class="o">*</span>
+                <span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">qvalues_followup_states</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="n">targets</span> <span class="o">-</span> <span class="n">qvalues</span><span class="p">[</span>
+                <span class="n">T</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">),</span>
+                <span class="n">actions</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,))]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip_error</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">quadratic_part</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">errors</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip_error</span><span class="p">)</span>
+            <span class="n">linear_part</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">-</span> <span class="n">quadratic_part</span>
+            <span class="n">cost_function</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">quadratic_part</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip_error</span> <span class="o">*</span> <span class="n">linear_part</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cost_function</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">errors</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_all_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observations</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">states</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">states_shared</span><span class="p">,</span>
+            <span class="n">followup_states</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">followup_states_shared</span><span class="p">,</span>
+            <span class="n">rewards</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rewards_shared</span><span class="p">,</span>
+            <span class="n">actions</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions_shared</span><span class="p">,</span>
+            <span class="n">terminals</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">terminals_shared</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_optimizer</span><span class="p">(</span><span class="n">cost_function</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">momentum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">updates</span><span class="o">.</span><span class="n">apply_momentum</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span>
+                    <span class="bp">None</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">momentum</span>
+            <span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Compiling _theano_train&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_theano_train</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+                <span class="p">[],</span>
+                <span class="p">[</span><span class="n">cost_function</span><span class="p">,</span> <span class="n">qvalues</span><span class="p">],</span>
+                <span class="n">updates</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span>
+                <span class="n">givens</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">)</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Compiling _theano_get_Q&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_theano_get_Q</span> <span class="o">=</span> <span class="n">theano</span><span class="o">.</span><span class="n">function</span><span class="p">(</span>
+                <span class="p">[],</span>
+                <span class="n">qvalues</span><span class="p">,</span>
+                <span class="n">givens</span><span class="o">=</span><span class="p">{</span><span class="n">states</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">states_shared</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Build a network consistent with the DeepMind Nature paper. &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Output shape = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">)</span>
+        <span class="n">l_in</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">InputLayer</span><span class="p">(</span>
+                <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span>
+        <span class="p">)</span>
+        <span class="n">l_conv1</span> <span class="o">=</span> <span class="n">dnn</span><span class="o">.</span><span class="n">Conv2DDNNLayer</span><span class="p">(</span>
+                <span class="n">l_in</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;conv_layer_1&#39;</span><span class="p">,</span>
+                <span class="n">num_filters</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+                <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+                <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                <span class="n">nonlinearity</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">nonlinearities</span><span class="o">.</span><span class="n">rectify</span><span class="p">,</span>
+                <span class="n">W</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">HeUniform</span><span class="p">(),</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">l_conv2</span> <span class="o">=</span> <span class="n">dnn</span><span class="o">.</span><span class="n">Conv2DDNNLayer</span><span class="p">(</span>
+                <span class="n">l_conv1</span><span class="p">,</span>
+                <span class="n">num_filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+                <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">nonlinearity</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">nonlinearities</span><span class="o">.</span><span class="n">rectify</span><span class="p">,</span>
+                <span class="n">W</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">HeUniform</span><span class="p">(),</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">l_conv3</span> <span class="o">=</span> <span class="n">dnn</span><span class="o">.</span><span class="n">Conv2DDNNLayer</span><span class="p">(</span>
+                <span class="n">l_conv2</span><span class="p">,</span>
+                <span class="n">num_filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+                <span class="n">filter_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+                <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">nonlinearity</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">nonlinearities</span><span class="o">.</span><span class="n">rectify</span><span class="p">,</span>
+                <span class="n">W</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">HeUniform</span><span class="p">(),</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">l_hidden1</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DenseLayer</span><span class="p">(</span>
+                <span class="n">l_conv3</span><span class="p">,</span>
+                <span class="n">num_units</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                <span class="n">nonlinearity</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">nonlinearities</span><span class="o">.</span><span class="n">rectify</span><span class="p">,</span>
+                <span class="n">W</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">HeUniform</span><span class="p">(),</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">l_out</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">DenseLayer</span><span class="p">(</span>
+                <span class="n">l_hidden1</span><span class="p">,</span>
+                <span class="n">num_units</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span>
+                <span class="n">nonlinearity</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">W</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">HeUniform</span><span class="p">(),</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">lasagne</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">l_out</span>
+
+    <span class="k">def</span> <span class="nf">_set_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cost_function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes the selected optimization algorithm.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cost_function (theano.tensor.var.TensorVariable): The cost function for the optimizer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Optimizer = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;rmsprop&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">updates</span><span class="o">.</span><span class="n">rmsprop</span><span class="p">(</span>
+                    <span class="n">cost_function</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">decay_rate</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rms_epsilon</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;sgd&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">updates</span><span class="o">.</span><span class="n">sgd</span><span class="p">(</span>
+                    <span class="n">cost_function</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized update for this kind of network: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_prepare_network_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Normalizes the states from one minibatch.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            states (numpy.ndarray): Mini-batch of states, shape=(batch_size,sequence_length,frame_width,frame_height)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            normalized_states (numpy.ndarray): State values divided by the maximim state value, shape=(batch_size,sequence_length,frame_width,frame_height)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Normalizing input&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">true_divide</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grayscales</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_copy_theta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Copies the weights of the current network to the target network. &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Copying weights&quot;</span><span class="p">)</span>
+        <span class="n">all_params</span> <span class="o">=</span> <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">get_all_param_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">)</span>
+        <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">helper</span><span class="o">.</span><span class="n">set_all_param_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_network</span><span class="p">,</span> <span class="n">all_params</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_share_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Copies a state into an dummy batch and then the dummy batch to the shared states.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(numpy.ndarray): Single state, shape=(sequence_length,frame_width,frame_height).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Copy to GPU&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dummy_batch</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states_shared</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dummy_batch</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DQNLasagne.train"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnlasagne.DQNLasagne.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minibatch</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prepare, perform and document a complete train step for one mini-batch.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            minibatch (numpy.ndarray): Mini-batch of states, shape=(batch_size,sequence_length,frame_width,frame_height).</span>
+<span class="sd">            epoch (int): Current train epoch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Complete trainig step for one minibatch&quot;</span><span class="p">)</span>
+        <span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">followup_states</span><span class="p">,</span> <span class="n">terminals</span> <span class="o">=</span> <span class="n">minibatch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states_shared</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">followup_states_shared</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">followup_states</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions_shared</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">actions</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rewards_shared</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">rewards</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">terminals_shared</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">terminals</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="n">cost</span><span class="p">,</span> <span class="n">qvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_theano_train</span><span class="p">()</span>
+        <span class="c1"># get only max qvalue per state</span>
+        <span class="c1"># make mean value of all max qvaluens</span>
+        <span class="n">qvalues_max_avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">qvalues</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_iterations</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_update_frequency</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_iterations</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_update_frequency</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_theta</span><span class="p">()</span>
+            <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Network update #</span><span class="si">%d</span><span class="s2">: Cost = </span><span class="si">%s</span><span class="s2"> , Average Q-value: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_iterations</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">)),</span> <span class="nb">str</span><span class="p">(</span><span class="n">qvalues_max_avg</span><span class="p">)))</span>
+        <span class="c1"># update statistics</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="o">.</span><span class="n">from_learner</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cost</span><span class="p">),</span> <span class="n">qvalues_max_avg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DQNLasagne.get_Q"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnlasagne.DQNLasagne.get_Q">[docs]</a>    <span class="k">def</span> <span class="nf">get_Q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Calculates the Q-values for one mini-batch.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state(numpy.ndarray): Single state, shape=(sequence_length,frame_width,frame_height).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            q_values (numpy.ndarray): Results for first element of mini-batch from one forward pass through the network, shape=(self.output_shape,)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_share_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_theano_get_Q</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DQNLasagne.save_weights"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnlasagne.DQNLasagne.save_weights">[docs]</a>    <span class="k">def</span> <span class="nf">save_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Saves the current network parameters to disk.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target_dir (str): Directory where the network parameters are stored for each episode.</span>
+<span class="sd">            epoch (int): Current epoch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">_</span><span class="si">%d</span><span class="s2">.npz&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">game</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">net_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="o">*</span><span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">get_all_param_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DQNLasagne.load_weights"><a class="viewcode-back" href="../../../modules/learner.html#deepatari.learner.dqnlasagne.DQNLasagne.load_weights">[docs]</a>    <span class="k">def</span> <span class="nf">load_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Loads the network parameters from a given file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source_file (str): Complete path to a file with network parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loaded_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source_file</span><span class="p">))</span>
+        <span class="n">lasagne</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">set_all_param_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="p">,</span> <span class="n">loaded_weights</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

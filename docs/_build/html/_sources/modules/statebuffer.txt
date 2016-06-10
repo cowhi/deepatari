@@ -1,0 +1,7 @@
+StateBuffer
+***********
+
+Some text here:
+
+.. autoclass:: deepatari.agents.StateBuffer
+    :members:

@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>deepatari.tools.statistics &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../help/install.html">Installation guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/memory.html">Memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/statistics.html">Statistics</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>deepatari.tools.statistics</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for deepatari.tools.statistics</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="Statistics"><a class="viewcode-back" href="../../../modules/statistics.html#deepatari.tools.Statistics">[docs]</a><span class="k">class</span> <span class="nc">Statistics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class handles all statistics of an experiment.</span>
+
+<span class="sd">    The class keeps the statistics running and saves certain paramaters at the</span>
+<span class="sd">    end of an epoch to files. It&#39;s also responsible for generating nice graphs</span>
+<span class="sd">    to evaluate the training progress.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        STATS_AGENT_TRAIN (tuple): Defines a tuple of all relevant agent training parameters for evaluation.</span>
+<span class="sd">        STATS_AGENT_TEST (tuple): Defines a tuple of all relevant agent testing parameters for evaluation.</span>
+<span class="sd">        STATS_AGENT_NET (tuple): Defines a tuple of all relevant network training parameters for evaluation.</span>
+<span class="sd">        name (str): The name of the statistic object.</span>
+<span class="sd">        agent (Agent): The agent that performes the learning.</span>
+<span class="sd">        net (Learner): Object of one of the Learner modules.</span>
+<span class="sd">        mem (Memory): The replay memory to save the experiences.</span>
+<span class="sd">        env (Environment): The envirnoment in which the agent actuates.</span>
+<span class="sd">        target_dir (str): Location to save the stats.</span>
+<span class="sd">        csv_file_train (file): The file were the training parameters are stored.</span>
+<span class="sd">        csv_writer_train (writer): Converts the data into a delimited string to save in the file.</span>
+<span class="sd">        csv_file_test (file): The file were the testing parameters are stored.</span>
+<span class="sd">        csv_writer_test (writer): Converts the data into a delimited string to save in the file.</span>
+<span class="sd">        time_start (time): Keeps track of the experiment start time.</span>
+<span class="sd">        phase (str): Indicates the current phase of the experiment.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">STATS_AGENT_TRAIN</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span><span class="s2">&quot;Phase&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">object_</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_games&quot;</span><span class="p">,</span><span class="s2">&quot;Games per Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_games_avg&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Game (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_games_min&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Game (min)&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_games_max&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Game (max)&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_game_avg&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Game (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_game_min&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Game (min)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_game_max&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Game (max)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;epsilon&quot;</span><span class="p">,</span><span class="s2">&quot;Exploration Rate&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_total&quot;</span><span class="p">,</span><span class="s2">&quot;Steps Total&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;replay_memory_size&quot;</span><span class="p">,</span><span class="s2">&quot;Replay Memory Size&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;q_avg_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Q-Value per Epoch (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;cost_avg_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Cost per Epoch (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;weight_updates&quot;</span><span class="p">,</span><span class="s2">&quot;Network Weight Updates&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;time_total&quot;</span><span class="p">,</span><span class="s2">&quot;Time Total&quot;</span><span class="p">,</span><span class="s2">&quot;s&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;time_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Time Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;s&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;steps_per_second&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Second&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">STATS_AGENT_TEST</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span><span class="s2">&quot;Phase&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">object_</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_games&quot;</span><span class="p">,</span><span class="s2">&quot;Games per Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_games_avg&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Game (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_games_min&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Game (min)&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_games_max&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Game (max)&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_game_avg&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Game (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_game_min&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Game (min)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;reward_game_max&quot;</span><span class="p">,</span><span class="s2">&quot;Reward per Game (max)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;epsilon&quot;</span><span class="p">,</span><span class="s2">&quot;Exploration Rate&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_steps_total&quot;</span><span class="p">,</span><span class="s2">&quot;Steps Total&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;replay_memory_size&quot;</span><span class="p">,</span><span class="s2">&quot;Replay Memory Size&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;q_avg_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Q-Value per Epoch (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;cost_avg_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Cost per Epoch (avg)&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;weight_updates&quot;</span><span class="p">,</span><span class="s2">&quot;Network Weight Updates&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;time_total&quot;</span><span class="p">,</span><span class="s2">&quot;Time Total&quot;</span><span class="p">,</span><span class="s2">&quot;s&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;time_epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Time Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;s&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;steps_per_second&quot;</span><span class="p">,</span><span class="s2">&quot;Steps per Second&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">STATS_NET</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;epoch&quot;</span><span class="p">,</span><span class="s2">&quot;Epoch&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;n_batch_update&quot;</span><span class="p">,</span><span class="s2">&quot;Batch Update&quot;</span><span class="p">,</span><span class="s2">&quot;#&quot;</span><span class="p">,</span><span class="s2">&quot;int&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;cost_current&quot;</span><span class="p">,</span><span class="s2">&quot;Cost per Batch Update&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;cost_average&quot;</span><span class="p">,</span><span class="s2">&quot;Cost Average&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;qvalue_average&quot;</span><span class="p">,</span><span class="s2">&quot;Q-Value per Batch Update&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;epsilon&quot;</span><span class="p">,</span><span class="s2">&quot;Exploration Rate&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="c1"># TODO: adapt stats for training and testing</span>
+    <span class="c1"># TODO: separate stats for network</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Overwrites the object.__str__ method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string (str): Important parameters of the object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;&#39;name&#39;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> \
+               <span class="s2">&quot;&#39;time_start&#39;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_start</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">mem</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize an statistics object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            agent (Agent): The agent that performes the learning.</span>
+<span class="sd">            net (Learner): Object of one of the Learner modules.</span>
+<span class="sd">            mem (Memory): The replay memory to save the experiences.</span>
+<span class="sd">            env (Environment): Current environment, which provides information for the learner.</span>
+<span class="sd">            args (argparse.Namespace): All settings either default or set via command line arguments.</span>
+<span class="sd">            target_dir (str): Location to save the stats.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing new object of type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__name__</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Observer&quot;</span>
+        <span class="c1"># attach statistics to agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="c1"># attach statistics to net</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">net</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">callback</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="c1"># make replay memory and environment available</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem</span> <span class="o">=</span> <span class="n">mem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>
+        <span class="c1"># make target dir available</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_dir</span> <span class="o">=</span> <span class="n">target_dir</span>
+        <span class="c1"># check directory for savin stats</span>
+        <span class="c1">#if not os.path.isdir(target_dir):</span>
+        <span class="c1">#    os.makedirs(target_dir)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_dir</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># setup file for train stats</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_train</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;stats_agent_train.csv&quot;</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_writer_train</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">csv_file_train</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_writer_train</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">STATS_AGENT_TRAIN</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_train</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="c1"># setup file for test stats</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_test</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">target_dir</span><span class="p">,</span> <span class="s2">&quot;stats_agent_test.csv&quot;</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_writer_test</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">csv_file_test</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_writer_test</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">stat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">STATS_AGENT_TEST</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_test</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="c1"># initialize timer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Statistics.close"><a class="viewcode-back" href="../../../modules/statistics.html#deepatari.tools.Statistics.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Closes the logfiles after the experiment. &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Closing logfiles&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_dir</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1">#if self.agent.phase in (&quot;train&quot;,&quot;random&quot;):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_train</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="c1">#elif self.agent.phase == &quot;test&quot;:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_test</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Statistics.reset_epoch_stats"><a class="viewcode-back" href="../../../modules/statistics.html#deepatari.tools.Statistics.reset_epoch_stats">[docs]</a>    <span class="k">def</span> <span class="nf">reset_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resets the parameters to initial values for each epoch. &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Resetting stats&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_epoch_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_game</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_avg</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_min</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_max</span> <span class="o">=</span> <span class="o">-</span><span class="n">sys</span><span class="o">.</span><span class="n">maxint</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_avg</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_min</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_max</span> <span class="o">=</span> <span class="o">-</span><span class="n">sys</span><span class="o">.</span><span class="n">maxint</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_avg_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_avg_epoch</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Statistics.from_agent"><a class="viewcode-back" href="../../../modules/statistics.html#deepatari.tools.Statistics.from_agent">[docs]</a>    <span class="k">def</span> <span class="nf">from_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">terminal</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles the callbacks from the agent.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reward (int): The reward received after taking the action.</span>
+<span class="sd">            terminal (bool): The new terminal state indicator after taking the action.</span>
+<span class="sd">            epsilon (float): The current epsilon value.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Callback from agent&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_epoch</span> <span class="o">+=</span> <span class="n">reward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game</span> <span class="o">+=</span> <span class="n">reward</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_epoch</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_game</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="k">if</span> <span class="n">terminal</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_avg</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_game</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_avg</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_game_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_game</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_game_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_game</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward_game</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_avg</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps_game</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_avg</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_game</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_game</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_game</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Statistics.from_learner"><a class="viewcode-back" href="../../../modules/statistics.html#deepatari.tools.Statistics.from_learner">[docs]</a>    <span class="k">def</span> <span class="nf">from_learner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cost_batch</span><span class="p">,</span> <span class="n">q_avg_batch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles the callbacks from the learner.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cost_batch (float): Cost per batch.</span>
+<span class="sd">            q_avg_batch (float): Average max Q-value per batch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Callback from net&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_avg_epoch</span> <span class="o">+=</span> <span class="p">(</span><span class="n">cost_batch</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_avg_epoch</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">update_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_avg_epoch</span> <span class="o">+=</span> <span class="p">(</span><span class="n">q_avg_batch</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_avg_epoch</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">update_iterations</span></div>
+
+
+<div class="viewcode-block" id="Statistics.write_epoch_stats"><a class="viewcode-back" href="../../../modules/statistics.html#deepatari.tools.Statistics.write_epoch_stats">[docs]</a>    <span class="k">def</span> <span class="nf">write_epoch_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Writes the stats for the current epoch to disk.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            epoch (int): Current epoch.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Epoch = </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">epoch</span><span class="p">)</span>
+        <span class="n">time_current</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">clock</span><span class="p">()</span>
+        <span class="n">time_total</span> <span class="o">=</span> <span class="n">time_current</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_start</span>
+        <span class="n">time_epoch</span> <span class="o">=</span> <span class="n">time_current</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_epoch_start</span>
+        <span class="k">if</span> <span class="n">time_epoch</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">steps_per_second</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps_epoch</span> <span class="o">/</span> <span class="n">time_epoch</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">steps_per_second</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_avg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_game</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        # getting qvalue dynamics ??</span>
+<span class="sd">        if self.validation_states is None and self.mem.count &gt; self.mem.batch_size:</span>
+<span class="sd">            # sample states for measuring Q-value dynamics</span>
+<span class="sd">            prestates, actions, rewards, poststates, terminals = self.mem.getMinibatch()</span>
+<span class="sd">            self.validation_states = prestates</span>
+<span class="sd">        if self.validation_states is not None:</span>
+<span class="sd">            qvalues = np.empty((self.net.output_shape, self.net.batch_size))</span>
+<span class="sd">            for i, state in enumerate(self.validation_states):</span>
+<span class="sd">                qvalues[:,i] = self.net.predict(state)</span>
+<span class="sd">            maxqs = np.max(qvalues, axis=1)</span>
+<span class="sd">            assert maxqs.shape[0] == qvalues.shape[0]</span>
+<span class="sd">            meanq = np.mean(maxqs)</span>
+<span class="sd">        else:</span>
+<span class="sd">            meanq = 0</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_dir</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">phase</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">,</span><span class="s2">&quot;random&quot;</span><span class="p">):</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_avg</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_min</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_max</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_avg</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_min</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_max</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">n_steps_total</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">q_avg_epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">cost_avg_epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">update_iterations</span><span class="p">,</span>
+                        <span class="s2">&quot;{:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_total</span><span class="p">),</span>
+                        <span class="s2">&quot;{:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_epoch</span><span class="p">),</span>
+                        <span class="n">steps_per_second</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">csv_writer_train</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_train</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">phase</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_games</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_avg</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_min</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">n_steps_games_max</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_avg</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_min</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_max</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">n_steps_total</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mem</span><span class="o">.</span><span class="n">count</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">q_avg_epoch</span><span class="p">,</span>     <span class="c1">#was: meanq,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">cost_avg_epoch</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">update_iterations</span><span class="p">,</span>
+                        <span class="s2">&quot;{:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_total</span><span class="p">),</span>
+                        <span class="s2">&quot;{:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time_epoch</span><span class="p">),</span>
+                        <span class="n">steps_per_second</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">csv_writer_test</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">csv_file_test</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+        <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;n_games: </span><span class="si">%d</span><span class="s2">, average_reward: </span><span class="si">%f</span><span class="s2">, min_game_reward: </span><span class="si">%d</span><span class="s2">, max_game_reward: </span><span class="si">%d</span><span class="s2">, epsilon: </span><span class="si">%f</span><span class="s2">, time_epoch: </span><span class="si">%d</span><span class="s2">s, steps_per_second: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_games</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_avg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_game_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">,</span> <span class="n">time_epoch</span><span class="p">,</span> <span class="n">steps_per_second</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

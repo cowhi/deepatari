@@ -1,0 +1,5 @@
+DQNNeon
+*******
+
+.. autoclass:: deepatari.learner.dqnneon.DQNNeon
+    :members:

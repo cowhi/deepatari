@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Statistics &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="License" href="../license.html"/>
+        <link rel="prev" title="AtariStateBuffer" href="ataristatebuffer.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html">Create a working directory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html#prepare-conda-environment">Prepare conda environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html#add-non-standard-packages">Add non standard packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html#install-deepatari">Install deepatari</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ataristatebuffer.html">AtariStateBuffer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Statistics</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/statistics.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="statistics">
+<h1>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h1>
+<p>Some text here:</p>
+<dl class="class">
+<dt id="deepatari.tools.Statistics">
+<em class="property">class </em><code class="descclassname">deepatari.tools.</code><code class="descname">Statistics</code><span class="sig-paren">(</span><em>agent</em>, <em>net</em>, <em>mem</em>, <em>env</em>, <em>args</em>, <em>target_dir</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/tools/statistics.html#Statistics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.tools.Statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class handles all statistics of an experiment.</p>
+<p>The class keeps the statistics running and saves certain paramaters at the
+end of an epoch to files. It&#8217;s also responsible for generating nice graphs
+to evaluate the training progress.</p>
+<dl class="attribute">
+<dt id="Statistics.STATS_AGENT_TRAIN">
+<code class="descname">STATS_AGENT_TRAIN</code><a class="headerlink" href="#Statistics.STATS_AGENT_TRAIN" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple</em> &#8211; Defines a tuple of all relevant agent training parameters for evaluation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.STATS_AGENT_TEST">
+<code class="descname">STATS_AGENT_TEST</code><a class="headerlink" href="#Statistics.STATS_AGENT_TEST" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple</em> &#8211; Defines a tuple of all relevant agent testing parameters for evaluation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.STATS_AGENT_NET">
+<code class="descname">STATS_AGENT_NET</code><a class="headerlink" href="#Statistics.STATS_AGENT_NET" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple</em> &#8211; Defines a tuple of all relevant network training parameters for evaluation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.name">
+<code class="descname">name</code><a class="headerlink" href="#Statistics.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of the statistic object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.agent">
+<code class="descname">agent</code><a class="headerlink" href="#Statistics.agent" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Agent</em> &#8211; The agent that performes the learning.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.net">
+<code class="descname">net</code><a class="headerlink" href="#Statistics.net" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Learner</em> &#8211; Object of one of the Learner modules.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.mem">
+<code class="descname">mem</code><a class="headerlink" href="#Statistics.mem" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Memory</em> &#8211; The replay memory to save the experiences.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.env">
+<code class="descname">env</code><a class="headerlink" href="#Statistics.env" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Environment</em> &#8211; The envirnoment in which the agent actuates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.target_dir">
+<code class="descname">target_dir</code><a class="headerlink" href="#Statistics.target_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Location to save the stats.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.csv_file_train">
+<code class="descname">csv_file_train</code><a class="headerlink" href="#Statistics.csv_file_train" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>file</em> &#8211; The file were the training parameters are stored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.csv_writer_train">
+<code class="descname">csv_writer_train</code><a class="headerlink" href="#Statistics.csv_writer_train" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>writer</em> &#8211; Converts the data into a delimited string to save in the file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.csv_file_test">
+<code class="descname">csv_file_test</code><a class="headerlink" href="#Statistics.csv_file_test" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>file</em> &#8211; The file were the testing parameters are stored.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.csv_writer_test">
+<code class="descname">csv_writer_test</code><a class="headerlink" href="#Statistics.csv_writer_test" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>writer</em> &#8211; Converts the data into a delimited string to save in the file.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.time_start">
+<code class="descname">time_start</code><a class="headerlink" href="#Statistics.time_start" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>time</em> &#8211; Keeps track of the experiment start time.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Statistics.phase">
+<code class="descname">phase</code><a class="headerlink" href="#Statistics.phase" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; Indicates the current phase of the experiment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.tools.Statistics.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/tools/statistics.html#Statistics.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.tools.Statistics.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes the logfiles after the experiment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.tools.Statistics.from_agent">
+<code class="descname">from_agent</code><span class="sig-paren">(</span><em>reward</em>, <em>terminal</em>, <em>epsilon</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/tools/statistics.html#Statistics.from_agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.tools.Statistics.from_agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the callbacks from the agent.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>reward</strong> (<em>int</em>) &#8211; The reward received after taking the action.</li>
+<li><strong>terminal</strong> (<em>bool</em>) &#8211; The new terminal state indicator after taking the action.</li>
+<li><strong>epsilon</strong> (<em>float</em>) &#8211; The current epsilon value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.tools.Statistics.from_learner">
+<code class="descname">from_learner</code><span class="sig-paren">(</span><em>cost_batch</em>, <em>q_avg_batch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/tools/statistics.html#Statistics.from_learner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.tools.Statistics.from_learner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the callbacks from the learner.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>cost_batch</strong> (<em>float</em>) &#8211; Cost per batch.</li>
+<li><strong>q_avg_batch</strong> (<em>float</em>) &#8211; Average max Q-value per batch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.tools.Statistics.reset_epoch_stats">
+<code class="descname">reset_epoch_stats</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/tools/statistics.html#Statistics.reset_epoch_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.tools.Statistics.reset_epoch_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the parameters to initial values for each epoch.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.tools.Statistics.write_epoch_stats">
+<code class="descname">write_epoch_stats</code><span class="sig-paren">(</span><em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/tools/statistics.html#Statistics.write_epoch_stats"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.tools.Statistics.write_epoch_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the stats for the current epoch to disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>epoch</strong> (<em>int</em>) &#8211; Current epoch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../license.html" class="btn btn-neutral float-right" title="License" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ataristatebuffer.html" class="btn btn-neutral" title="AtariStateBuffer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,679 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Learner Classes &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="DQNNeon" href="dqnneon.html"/>
+        <link rel="prev" title="Environment" href="environment.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html">Installation guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environment</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Learner</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#learner-base-class">Learner - Base class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dqnneon">DQNNeon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dqnlasagne">DQNLasagne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dqnneon.html">DQNNeon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dqnlasagne.html">DQNLasagne</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replaymemory.html">ReplayMemory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ataristatebuffer.html">AtariStateBuffer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li><code class="docutils literal"><span class="pre">Learner</span> <span class="pre">Classes</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/learner.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="learner-classes">
+<span id="learner"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">Learner</span> <span class="pre">Classes</span></code><a class="headerlink" href="#learner-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="learner-base-class">
+<h2>Learner - Base class<a class="headerlink" href="#learner-base-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.learner.Learner">
+<em class="property">class </em><code class="descclassname">deepatari.learner.</code><code class="descname">Learner</code><span class="sig-paren">(</span><em>env</em>, <em>args</em>, <em>rng</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/learner.html#Learner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.Learner" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the base class for all learning algorithms.</p>
+<p>The modules that interact with the agent, the replay memory and
+statistics are called here and forward to the respective internal
+modules in the subclasses.</p>
+<dl class="attribute">
+<dt id="Learner.grayscales">
+<code class="descname">grayscales</code><a class="headerlink" href="#Learner.grayscales" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Maximum of color value per pixel for normalization.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.name">
+<code class="descname">name</code><a class="headerlink" href="#Learner.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The name of the network object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.frame_dims">
+<code class="descname">frame_dims</code><a class="headerlink" href="#Learner.frame_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; Dimension of the resized frames.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.output_shape">
+<code class="descname">output_shape</code><a class="headerlink" href="#Learner.output_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Dimension of the output layer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.sequence_length">
+<code class="descname">sequence_length</code><a class="headerlink" href="#Learner.sequence_length" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Determines how many frames form a state.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.batch_size">
+<code class="descname">batch_size</code><a class="headerlink" href="#Learner.batch_size" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Size of the mini-batch for one learning step.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.discount_rate">
+<code class="descname">discount_rate</code><a class="headerlink" href="#Learner.discount_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Determines the discount of future rewards.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.learning_rate">
+<code class="descname">learning_rate</code><a class="headerlink" href="#Learner.learning_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Learning rate of the network.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.decay_rate">
+<code class="descname">decay_rate</code><a class="headerlink" href="#Learner.decay_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Decay rate for RMSProp and Adadelta algorithms.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.rms_epsilon">
+<code class="descname">rms_epsilon</code><a class="headerlink" href="#Learner.rms_epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Epsilon for RMSProp.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.momentum">
+<code class="descname">momentum</code><a class="headerlink" href="#Learner.momentum" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Momentum for optimizer.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.clip_error">
+<code class="descname">clip_error</code><a class="headerlink" href="#Learner.clip_error" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Clip error term in update between this number and its negative to avoid gradient become zero.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.target_update_frequency">
+<code class="descname">target_update_frequency</code><a class="headerlink" href="#Learner.target_update_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Copy weights of training network to target network after this many steps.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.update_iterations">
+<code class="descname">update_iterations</code><a class="headerlink" href="#Learner.update_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; Counter for target network updates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.min_reward">
+<code class="descname">min_reward</code><a class="headerlink" href="#Learner.min_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Lower boundary for rewards.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.max_reward">
+<code class="descname">max_reward</code><a class="headerlink" href="#Learner.max_reward" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> &#8211; Upper boundary for rewards.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Learner.rng">
+<code class="descname">rng</code><a class="headerlink" href="#Learner.rng" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mtrand.RandomState</em> &#8211; Initialized Mersenne Twister pseudo-random number generator.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All subclasses must inherite this class &#8211;&gt; &#8216;class NewClass(Learner)&#8217;.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.learner.Learner.get_Q">
+<code class="descname">get_Q</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/learner.html#Learner.get_Q"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.Learner.get_Q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get results from one forward pass through the network.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.Learner.load_weights">
+<code class="descname">load_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/learner.html#Learner.load_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.Learner.load_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the network weights acording to the used library.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.Learner.save_weights">
+<code class="descname">save_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/learner.html#Learner.save_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.Learner.save_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the network weights acording to the used library.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.Learner.train">
+<code class="descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/learner.html#Learner.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.Learner.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Individual train function for each subclass.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dqnneon">
+<h2>DQNNeon<a class="headerlink" href="#dqnneon" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.learner.dqnneon.DQNNeon">
+<em class="property">class </em><code class="descclassname">deepatari.learner.dqnneon.</code><code class="descname">DQNNeon</code><span class="sig-paren">(</span><em>env</em>, <em>args</em>, <em>rng</em>, <em>name='DQNNeon'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is an implementation of the DQN network based on Neon.</p>
+<p>The modules that interact with the agent, the replay memory and the
+statistic calls are implemented here, taking the individual requirements
+of the Lasagne framework into account. The code is adapted from:
+<a class="reference external" href="https://github.com/tambetm/simple_dqn">https://github.com/tambetm/simple_dqn</a></p>
+<dl class="attribute">
+<dt id="DQNNeon.input_shape">
+<code class="descname">input_shape</code><a class="headerlink" href="#DQNNeon.input_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; Dimension of the network input.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.dummy_batch">
+<code class="descname">dummy_batch</code><a class="headerlink" href="#DQNNeon.dummy_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Dummy batche used to calculate Q-values for single states.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.batch_norm">
+<code class="descname">batch_norm</code><a class="headerlink" href="#DQNNeon.batch_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Indicates if normalization is wanted for a certain layer (default=False).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.be">
+<code class="descname">be</code><a class="headerlink" href="#DQNNeon.be" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.backends.nervanagpu.NervanaGPU</em> &#8211; Describes the backend for the Neon implementation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.input">
+<code class="descname">input</code><a class="headerlink" href="#DQNNeon.input" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.backends.nervanagpu.GPUTensor</em> &#8211; Definition of network input shape.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.targets">
+<code class="descname">targets</code><a class="headerlink" href="#DQNNeon.targets" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.backends.nervanagpu.GPUTensor</em> &#8211; Definition of network output shape.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.model">
+<code class="descname">model</code><a class="headerlink" href="#DQNNeon.model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.models.model.Model</em> &#8211; Generated Neon model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.target_model">
+<code class="descname">target_model</code><a class="headerlink" href="#DQNNeon.target_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.models.model.Model</em> &#8211; Generated target Neon model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.cost_func">
+<code class="descname">cost_func</code><a class="headerlink" href="#DQNNeon.cost_func" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.layers.layer.GeneralizedCost</em> &#8211; Cost function for model training.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.callback">
+<code class="descname">callback</code><a class="headerlink" href="#DQNNeon.callback" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Statistics</em> &#8211; Hook for the statistics object to pass train and test information.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">More attributes of this class are defined in the base class Learner.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.get_Q">
+<code class="descname">get_Q</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.get_Q"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.get_Q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the Q-values for one mini-batch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> (<em>numpy.ndarray</em>) &#8211; Single state, shape=(sequence_length,frame_width,frame_height).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>q_values</strong> &#8211; Results for first element of mini-batch from one forward pass through the network, shape=(self.output_shape,)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.load_weights">
+<code class="descname">load_weights</code><span class="sig-paren">(</span><em>source_file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.load_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.load_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the network parameters from a given file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_file</strong> (<em>str</em>) &#8211; Complete path to a file with network parameters.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.save_weights">
+<code class="descname">save_weights</code><span class="sig-paren">(</span><em>target_dir</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.save_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.save_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the current network parameters to disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target_dir</strong> (<em>str</em>) &#8211; Directory where the network parameters are stored for each episode.</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; Current epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>minibatch</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare, perform and document a complete train step for one minibatch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>minibatch</strong> (<em>numpy.ndarray</em>) &#8211; Mini-batch of states, shape=(batch_size,sequence_length,frame_width,frame_height)</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; Current train epoch</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="dqnlasagne">
+<h2>DQNLasagne<a class="headerlink" href="#dqnlasagne" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="deepatari.learner.dqnlasagne.DQNLasagne">
+<em class="property">class </em><code class="descclassname">deepatari.learner.dqnlasagne.</code><code class="descname">DQNLasagne</code><span class="sig-paren">(</span><em>env</em>, <em>args</em>, <em>rng</em>, <em>name='DQNLasagne'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnlasagne.html#DQNLasagne"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnlasagne.DQNLasagne" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is an implementation of the DQN network based on the Lasagne Theano framework.</p>
+<p>The modules that interact with the agent, the replay memory and the
+statistic calls are implemented here, taking the individual requirements
+of the Lasagne framework into account. The code is adapted from:
+<a class="reference external" href="https://github.com/spragunr/deep_q_rl">https://github.com/spragunr/deep_q_rl</a></p>
+<dl class="attribute">
+<dt id="DQNLasagne.input_shape">
+<code class="descname">input_shape</code><a class="headerlink" href="#DQNLasagne.input_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; Dimension of the network input.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.dummy_batch">
+<code class="descname">dummy_batch</code><a class="headerlink" href="#DQNLasagne.dummy_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Dummy batche used to calculate Q-values for single states.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.network">
+<code class="descname">network</code><a class="headerlink" href="#DQNLasagne.network" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>lasagne.layers.dense.DenseLayer</em> &#8211; Structure of the neural network.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.target_network">
+<code class="descname">target_network</code><a class="headerlink" href="#DQNLasagne.target_network" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>lasagne.layers.dense.DenseLayer</em> &#8211; Structure of the target neural network.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.states_shared">
+<code class="descname">states_shared</code><a class="headerlink" href="#DQNLasagne.states_shared" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>theano.sandbox.cuda.var.CudaNdarraySharedVariable</em> &#8211; Interface to CUDA allocated array for states.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.followup_states_shared">
+<code class="descname">followup_states_shared</code><a class="headerlink" href="#DQNLasagne.followup_states_shared" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>theano.sandbox.cuda.var.CudaNdarraySharedVariable</em> &#8211; Interface to CUDA allocated array for followup-states.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.rewards_shared">
+<code class="descname">rewards_shared</code><a class="headerlink" href="#DQNLasagne.rewards_shared" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>theano.sandbox.cuda.var.CudaNdarraySharedVariable</em> &#8211; Interface to CUDA allocated array for rewards.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.actions_shared">
+<code class="descname">actions_shared</code><a class="headerlink" href="#DQNLasagne.actions_shared" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>theano.sandbox.cuda.var.CudaNdarraySharedVariable</em> &#8211; Interface to CUDA allocated array for actions.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.terminals_shared">
+<code class="descname">terminals_shared</code><a class="headerlink" href="#DQNLasagne.terminals_shared" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>theano.sandbox.cuda.var.CudaNdarraySharedVariable</em> &#8211; Interface to CUDA allocated array for terminal state indicators.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.params">
+<code class="descname">params</code><a class="headerlink" href="#DQNLasagne.params" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list</em> &#8211; Network parameter.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.observations">
+<code class="descname">observations</code><a class="headerlink" href="#DQNLasagne.observations" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dict</em> &#8211; Dictionary for all shared variables for the theano train function.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne._theano_train">
+<code class="descname">_theano_train</code><a class="headerlink" href="#DQNLasagne._theano_train" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>theano.compile.function_module.Function</em> &#8211; Theano function that implements a full training step for one mini-batch and returns the Q-values and the costs.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne._theano_get_Q">
+<code class="descname">_theano_get_Q</code><a class="headerlink" href="#DQNLasagne._theano_get_Q" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>theano.compile.function_module.Function</em> &#8211; Theano function that calculates one forward pass through the network for a mini-batch and returns the Q-value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNLasagne.callback">
+<code class="descname">callback</code><a class="headerlink" href="#DQNLasagne.callback" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Statistics</em> &#8211; Hook for the statistics object to pass train and test information.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">More attributes of this class are defined in the base class Learner.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.learner.dqnlasagne.DQNLasagne.get_Q">
+<code class="descname">get_Q</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnlasagne.html#DQNLasagne.get_Q"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnlasagne.DQNLasagne.get_Q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the Q-values for one mini-batch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> (<em>numpy.ndarray</em>) &#8211; Single state, shape=(sequence_length,frame_width,frame_height).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>q_values</strong> &#8211; Results for first element of mini-batch from one forward pass through the network, shape=(self.output_shape,)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnlasagne.DQNLasagne.load_weights">
+<code class="descname">load_weights</code><span class="sig-paren">(</span><em>source_file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnlasagne.html#DQNLasagne.load_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnlasagne.DQNLasagne.load_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the network parameters from a given file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_file</strong> (<em>str</em>) &#8211; Complete path to a file with network parameters.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnlasagne.DQNLasagne.save_weights">
+<code class="descname">save_weights</code><span class="sig-paren">(</span><em>target_dir</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnlasagne.html#DQNLasagne.save_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnlasagne.DQNLasagne.save_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the current network parameters to disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target_dir</strong> (<em>str</em>) &#8211; Directory where the network parameters are stored for each episode.</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; Current epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnlasagne.DQNLasagne.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>minibatch</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnlasagne.html#DQNLasagne.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnlasagne.DQNLasagne.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare, perform and document a complete train step for one mini-batch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>minibatch</strong> (<em>numpy.ndarray</em>) &#8211; Mini-batch of states, shape=(batch_size,sequence_length,frame_width,frame_height).</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; Current train epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dqnneon.html" class="btn btn-neutral float-right" title="DQNNeon" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="environment.html" class="btn btn-neutral" title="Environment" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

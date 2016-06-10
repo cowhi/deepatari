@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation guide &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="Experiment" href="../modules/experiment.html"/>
+        <link rel="prev" title="Welcome to deepatari!" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-working-directory">Create a working directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-conda-environment">Prepare conda environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-non-standard-packages">Add non standard packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-deepatari">Install deepatari</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules/experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/learner.html">Learner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/ataristatebuffer.html">AtariStateBuffer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/statistics.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>Installation guide</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/help/install.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation-guide">
+<h1>Installation guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
+<p>This guide will help install all the necessary software in a virtual
+environment generated with Anaconda. It is a step by step guide which
+might not be necessary for everyone. If you want to integrate the
+dependencies into your existing installation please do so.</p>
+<p>Please be aware that I do not cover the installation of the Nvidia CUDA and
+CuDNN driver, please follow these instructions:</p>
+<p><a class="reference external" href="http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/">http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/</a></p>
+<div class="section" id="create-a-working-directory">
+<h2>Create a working directory<a class="headerlink" href="#create-a-working-directory" title="Permalink to this headline">¶</a></h2>
+<p>Create a folder, where you download all necessary stuff and keep the
+rest of your system clean:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">deepatari_stuff</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="n">deepatari_stuff</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prepare-conda-environment">
+<h2>Prepare conda environment<a class="headerlink" href="#prepare-conda-environment" title="Permalink to this headline">¶</a></h2>
+<p>If you haven&#8217;t done it already, install anaconda with instructions from here:</p>
+<p><a class="reference external" href="http://conda.pydata.org/docs/installation.html">http://conda.pydata.org/docs/installation.html</a></p>
+<p>Create a conda environment with the basic packages and activate it:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">--</span><span class="n">name</span> <span class="n">deepatariEnv</span> <span class="n">python</span><span class="o">=</span><span class="mf">2.7</span> <span class="n">pip</span> <span class="n">numpy</span> <span class="n">opencv</span> <span class="n">matplotlib</span>
+<span class="n">source</span> <span class="n">activate</span> <span class="n">deepatariEnv</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-non-standard-packages">
+<h2>Add non standard packages<a class="headerlink" href="#add-non-standard-packages" title="Permalink to this headline">¶</a></h2>
+<p>The rest of the packages should be installed in this order, because they
+downgrade certain packages which will be upgraded later on again.</p>
+<p>Download and install Neon [3]:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">NervanaSystems</span><span class="o">/</span><span class="n">neon</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">neon</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">sysinstall</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">..</span>
+</pre></div>
+</div>
+<p>Download and install OpenAI gym [4]:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">openai</span><span class="o">/</span><span class="n">gym</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">gym</span> <span class="o">&amp;&amp;</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="s1">&#39;.[atari]&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">..</span>
+</pre></div>
+</div>
+<p>Install the latest Theano [6] version :</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Theano</span><span class="o">/</span><span class="n">Theano</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">master</span><span class="o">.</span><span class="n">zip</span>
+</pre></div>
+</div>
+<p>Install the latest Lasagne [2] for Theano :</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">Lasagne</span><span class="o">/</span><span class="n">Lasagne</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">master</span><span class="o">.</span><span class="n">zip</span>
+</pre></div>
+</div>
+<p>Install Tensorflow (Ubuntu/Linux 64-bit, GPU enabled. Requires CUDA toolkit 7.5
+and CuDNN v4. Other options on library page.) [5]:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">storage</span><span class="o">.</span><span class="n">googleapis</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">gpu</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">-</span><span class="mf">0.8</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">cp27</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">linux_x86_64</span><span class="o">.</span><span class="n">whl</span>
+</pre></div>
+</div>
+<p>Install Keras [1]:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">keras</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-deepatari">
+<h2>Install deepatari<a class="headerlink" href="#install-deepatari" title="Permalink to this headline">¶</a></h2>
+<p>The setup routine installs some runnable scripts to use directly from the
+command line:</p>
+<div class="code shell highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">cowhi</span><span class="o">/</span><span class="n">deepatari</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">deepatari</span> <span class="o">&amp;&amp;</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="o">..</span>
+</pre></div>
+</div>
+<p>Now you should be able to test the installation.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../modules/experiment.html" class="btn btn-neutral float-right" title="Experiment" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Welcome to deepatari!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

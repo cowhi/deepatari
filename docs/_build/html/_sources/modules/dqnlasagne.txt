@@ -1,0 +1,5 @@
+DQNLasagne
+**********
+
+.. autoclass:: deepatari.learner.DQNLasagne
+    :members:

@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DQNNeon &mdash; deepatari 0.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/fix_rtd.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="deepatari 0.1.0 documentation" href="../index.html"/>
+        <link rel="next" title="DQNLasagne" href="dqnlasagne.html"/>
+        <link rel="prev" title="Learner Classes" href="learner.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> deepatari
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/install.html">Installation guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learner.html">Learner</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DQNNeon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dqnlasagne.html">DQNLasagne</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replaymemory.html">ReplayMemory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ataristatebuffer.html">AtariStateBuffer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="statistics.html">Statistics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">deepatari</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>DQNNeon</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/modules/dqnneon.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dqnneon">
+<h1>DQNNeon<a class="headerlink" href="#dqnneon" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="deepatari.learner.dqnneon.DQNNeon">
+<em class="property">class </em><code class="descclassname">deepatari.learner.dqnneon.</code><code class="descname">DQNNeon</code><span class="sig-paren">(</span><em>env</em>, <em>args</em>, <em>rng</em>, <em>name='DQNNeon'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is an implementation of the DQN network based on Neon.</p>
+<p>The modules that interact with the agent, the replay memory and the
+statistic calls are implemented here, taking the individual requirements
+of the Lasagne framework into account. The code is adapted from:
+<a class="reference external" href="https://github.com/tambetm/simple_dqn">https://github.com/tambetm/simple_dqn</a></p>
+<dl class="attribute">
+<dt id="DQNNeon.input_shape">
+<code class="descname">input_shape</code><a class="headerlink" href="#DQNNeon.input_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple[int]</em> &#8211; Dimension of the network input.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.dummy_batch">
+<code class="descname">dummy_batch</code><a class="headerlink" href="#DQNNeon.dummy_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>numpy.ndarray</em> &#8211; Dummy batche used to calculate Q-values for single states.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.batch_norm">
+<code class="descname">batch_norm</code><a class="headerlink" href="#DQNNeon.batch_norm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>bool</em> &#8211; Indicates if normalization is wanted for a certain layer (default=False).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.be">
+<code class="descname">be</code><a class="headerlink" href="#DQNNeon.be" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.backends.nervanagpu.NervanaGPU</em> &#8211; Describes the backend for the Neon implementation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.input">
+<code class="descname">input</code><a class="headerlink" href="#DQNNeon.input" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.backends.nervanagpu.GPUTensor</em> &#8211; Definition of network input shape.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.targets">
+<code class="descname">targets</code><a class="headerlink" href="#DQNNeon.targets" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.backends.nervanagpu.GPUTensor</em> &#8211; Definition of network output shape.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.model">
+<code class="descname">model</code><a class="headerlink" href="#DQNNeon.model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.models.model.Model</em> &#8211; Generated Neon model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.target_model">
+<code class="descname">target_model</code><a class="headerlink" href="#DQNNeon.target_model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.models.model.Model</em> &#8211; Generated target Neon model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.cost_func">
+<code class="descname">cost_func</code><a class="headerlink" href="#DQNNeon.cost_func" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>neon.layers.layer.GeneralizedCost</em> &#8211; Cost function for model training.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="DQNNeon.callback">
+<code class="descname">callback</code><a class="headerlink" href="#DQNNeon.callback" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Statistics</em> &#8211; Hook for the statistics object to pass train and test information.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">More attributes of this class are defined in the base class Learner.</p>
+</div>
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.get_Q">
+<code class="descname">get_Q</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.get_Q"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.get_Q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the Q-values for one mini-batch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>state</strong> (<em>numpy.ndarray</em>) &#8211; Single state, shape=(sequence_length,frame_width,frame_height).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>q_values</strong> &#8211; Results for first element of mini-batch from one forward pass through the network, shape=(self.output_shape,)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.load_weights">
+<code class="descname">load_weights</code><span class="sig-paren">(</span><em>source_file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.load_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.load_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the network parameters from a given file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_file</strong> (<em>str</em>) &#8211; Complete path to a file with network parameters.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.save_weights">
+<code class="descname">save_weights</code><span class="sig-paren">(</span><em>target_dir</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.save_weights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.save_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the current network parameters to disk.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>target_dir</strong> (<em>str</em>) &#8211; Directory where the network parameters are stored for each episode.</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; Current epoch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="deepatari.learner.dqnneon.DQNNeon.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>minibatch</em>, <em>epoch</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/deepatari/learner/dqnneon.html#DQNNeon.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#deepatari.learner.dqnneon.DQNNeon.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare, perform and document a complete train step for one minibatch.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>minibatch</strong> (<em>numpy.ndarray</em>) &#8211; Mini-batch of states, shape=(batch_size,sequence_length,frame_width,frame_height)</li>
+<li><strong>epoch</strong> (<em>int</em>) &#8211; Current train epoch</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dqnlasagne.html" class="btn btn-neutral float-right" title="DQNLasagne" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="learner.html" class="btn btn-neutral" title="Learner Classes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Ruben Glatt.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

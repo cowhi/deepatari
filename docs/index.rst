@@ -3,10 +3,32 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to deepatari's documentation!
-=====================================
+Welcome to **deepatari**!
+=========================
 
-Contents:
+Help
+----
+
+.. toctree::
+   :maxdepth: 2
+
+   Installation guide <help/install>
+
+API reference
+-------------
+
+.. toctree::
+   :maxdepth: 2
+
+   Experiment <modules/experiment>
+   Agent <modules/agent>
+   Environment <modules/environment>
+   Learner <modules/learner>
+   Memory <modules/memory>
+   Statistics <modules/statistics>
+
+About
+-----
 
 .. toctree::
    :maxdepth: 2
@@ -21,4 +43,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
