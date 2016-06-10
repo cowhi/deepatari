@@ -159,7 +159,7 @@ implementation directly on the GPU.
 
 .. code:: shell
 
-  learn_to_play --with neon --memory_size 128 --random_steps 64 --train_steps 64 --test_steps 32 --epochs 1 --log_level INFO  --backend cpu
+  learn_to_play --with DQNNeon --fill_mem_size 128 --train_steps 128 --test_steps 64 --epochs 2 --log_type stdout --log_stats False --backend cpu
 
 Sources & Inspirations
 ======================
