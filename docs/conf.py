@@ -19,29 +19,25 @@ try:
     from unittest.mock import Mock
 except ImportError:
     from mock import Mock
-
+sys.modules['lasagne'] = Mock()
+sys.modules['lasagne.layers'] = Mock()
 sys.modules['neon'] = Mock()
 sys.modules['numpy'] = Mock()
 sys.modules['theano'] = Mock()
-#sys.modules['theano.tensor'] = Mock()
-sys.modules['lasagne'] = Mock()
-#sys.modules['lasagne.layers'] = Mock()
+sys.modules['theano.tensor'] = Mock()
+
 '''
 try:
     from unittest.mock import MagicMock
-except ImportError:
-    pass
-else:
     class Mock(MagicMock):
         @classmethod
         def __getattr__(cls, name):
                 return Mock()
 
-    MOCK_MODULES = ['theano', 'numpy', 'lasagne', 'neon', 'lasagne.layers.dnn']
+    MOCK_MODULES = ['theano', 'numpy', 'lasagne', 'neon']
     sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
-
-
-
+except ImportError:
+    pass
 
 
 
