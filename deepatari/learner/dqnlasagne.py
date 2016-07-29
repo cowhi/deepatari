@@ -305,7 +305,7 @@ class DQNLasagne(Learner):
             target_dir (str): Directory where the network parameters are stored for each episode.
             epoch (int): Current epoch.
         """
-        filename = "%s_%s_%s_%d.npz" % (str(self.args.game.lower()), str(self.args.net_type.lower()), str(self.args.optimizer.lower()), (epoch + 1))
+        filename = "%s_%s_%s_%d.npz" % (str(self.args.game.lower()), str(self.args.learner_type.lower()), str(self.args.optimizer.lower()), (epoch + 1))
         np.savez(os.path.join(target_dir, filename), *lasagne.layers.get_all_param_values(self.network))
 
     def load_weights(self, source_file):

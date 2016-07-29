@@ -28,7 +28,7 @@ def parse_args(args):
     exparg.add_argument("--env_type", default="AtariEnv", help="Choose environment implementation.")
     exparg.add_argument("--agent_type", default="AtariAgent", help="Choose agent implementation.")
     exparg.add_argument("--memory_type", default="ReplayMemory", help="Choose memory implementation.")
-    exparg.add_argument('--with', dest="net_type", default='DQNNeon', help='Choose network implementation.')
+    exparg.add_argument('--with', dest="learner_type", default='DQNNeon', help='Choose network implementation.')
     exparg.add_argument("--log_level", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO", help="Log level.")
     exparg.add_argument("--log_type", choices=["file", "stdout"], default="file", help="Where to log to.")
     exparg.add_argument("--log_stats", type=str2bool, default=True, help="Turn stats on and off.")

@@ -71,8 +71,9 @@ class Experiment(object):
                     __import__('deepatari.envs.' + self.args.env_type.lower(),
                             fromlist=[self.args.env_type]),
                     self.args.env_type)
-        except ImportError:
-            sys.stderr.write("ERROR: missing python module: " + self.args.env_type + "\n")
+        except ImportError as exc:
+            sys.stderr.write("ERROR: " + self.args.env_type + "\n")
+            sys.stderr.write("ERROR: " + str(exc) + "\n")
             sys.exit(1)
         self.env = EnvironmentClass(self.args, self.rng)
 
@@ -81,28 +82,31 @@ class Experiment(object):
                     __import__('deepatari.memory.' + self.args.memory_type.lower(),
                             fromlist=[self.args.memory_type]),
                     self.args.memory_type)
-        except ImportError:
-            sys.stderr.write("ERROR: missing python module: " + self.args.memory_type + "\n")
+        except ImportError as exc:
+            sys.stderr.write("ERROR: " + self.args.memory_type + "\n")
+            sys.stderr.write("ERROR: " + str(exc) + "\n")
             sys.exit(1)
         self.mem = MemoryClass(self.args, self.env.avail_actions, self.rng)
 
         try:
-            NetClass = getattr(
-                    __import__('deepatari.learner.' + self.args.net_type.lower(),
-                            fromlist=[self.args.net_type]),
-                    self.args.net_type)
-        except ImportError:
-            sys.stderr.write("ERROR: missing python module: " + self.args.net_type + "\n")
+            LearnerClass = getattr(
+                    __import__('deepatari.learner.' + self.args.learner_type.lower(),
+                            fromlist=[self.args.learner_type]),
+                    self.args.learner_type)
+        except ImportError as exc:
+            sys.stderr.write("ERROR: " + self.args.learner_type + "\n")
+            sys.stderr.write("ERROR: " + str(exc) + "\n")
             sys.exit(1)
-        self.net = NetClass(self.env, self.args, self.rng)
+        self.net = LearnerClass(self.env, self.args, self.rng)
 
         try:
             AgentClass = getattr(
                     __import__('deepatari.agents.' + self.args.agent_type.lower(),
                             fromlist=[self.args.agent_type]),
                     self.args.agent_type)
-        except ImportError:
-            sys.stderr.write("ERROR: missing python module: " + self.args.agent_type + "\n")
+        except ImportError as exc:
+            sys.stderr.write("ERROR: " + self.args.agent_type + "\n")
+            sys.stderr.write("ERROR: " + str(exc) + "\n")
             sys.exit(1)
         self.agent = AgentClass(self.env, self.mem, self.net, self.args, self.rng)
 

@@ -99,8 +99,8 @@ class AtariEnv(Environment):
             self.counts_lives = False
         else:
             self.counts_lives = True
-            self.just_lost_live = False
             self.current_lives = (self.gym).ale.lives()
+        self.just_lost_live = False
         self.current_frame = None
         self.terminal_state = None
         # OpenCV expects width as first and height as second s

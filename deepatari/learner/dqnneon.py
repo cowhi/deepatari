@@ -235,10 +235,16 @@ class DQNNeon(Learner):
         self.update_iterations += 1
         if self.target_update_frequency and self.update_iterations % self.target_update_frequency == 0:
             self._copy_theta()
-            _logger.info("Network update #%d: Cost = %s, Avg Max Q-value = %s" % (self.update_iterations, str(cost.asnumpyarray()[0][0]), str(maxpostq_avg)))
+            if isinstance(cost, np.ndarray):
+                _logger.info("Network update #%d: Cost = %s, Avg Max Q-value = %s" % (self.update_iterations, str(cost[0][0]), str(maxpostq_avg)))
+            else:
+                _logger.info("Network update #%d: Cost = %s, Avg Max Q-value = %s" % (self.update_iterations, str(cost.asnumpyarray()[0][0]), str(maxpostq_avg)))
         # update statistics
         if self.callback:
-            self.callback.from_learner(cost.asnumpyarray()[0,0], maxpostq_avg)
+            if isinstance(cost, np.ndarray):
+                self.callback.from_learner(cost[0,0], maxpostq_avg)
+            else:
+                self.callback.from_learner(cost.asnumpyarray()[0,0], maxpostq_avg)
 
     def get_Q(self, state):
         """ Calculates the Q-values for one mini-batch.
@@ -275,7 +281,7 @@ class DQNNeon(Learner):
             target_dir (str): Directory where the network parameters are stored for each episode.
             epoch (int): Current epoch.
         """
-        filename = "%s_%s_%s_%d.prm" % (str(self.args.game.lower()), str(self.args.net_type.lower()), str(self.args.optimizer.lower()), (epoch + 1))
+        filename = "%s_%s_%s_%d.prm" % (str(self.args.game.lower()), str(self.args.learner_type.lower()), str(self.args.optimizer.lower()), (epoch + 1))
         self.model.save_params(os.path.join(target_dir, filename))
 
     def load_weights(self, source_file):

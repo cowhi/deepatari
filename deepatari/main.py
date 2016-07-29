@@ -26,7 +26,7 @@ def run():
     args = parse_args(sys.argv[1:])
     # prepare target directory for logs, stats and nets
     if args.log_stats or not args.log_type == 'stdout':
-        result_dir = "%s_%s_%s_%s" % (str(time.strftime("%Y-%m-%d_%H-%M")) ,str(args.game.lower()), str(args.net_type.lower()), str(args.optimizer.lower()))
+        result_dir = "%s_%s_%s_%s" % (str(time.strftime("%Y-%m-%d_%H-%M")) ,str(args.game.lower()), str(args.learner_type.lower()), str(args.optimizer.lower()))
         target_dir = os.path.join(os.getcwd(),"results", result_dir)
         if not os.path.isdir(target_dir):
             os.makedirs(target_dir)
