@@ -1,8 +1,8 @@
-# Add your requirements here like:
-# scipy>=0.9
-
-numpy
-lasagne
-theano
-neon
-tensorflow
+numpy==1.11.2
+sphinx_rtd_theme==0.1.9
+cv2==1.0
+gym==0.5.4
+lasagne==0.1
+neon==0.1.2
+setuptools==28.8.0
+theano==0.8.2

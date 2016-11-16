@@ -1,0 +1,8 @@
+# Add your requirements here like:
+# scipy>=0.9
+
+numpy
+lasagne
+theano
+neon
+tensorflow
